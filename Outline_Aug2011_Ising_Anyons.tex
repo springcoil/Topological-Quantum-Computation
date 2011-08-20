@@ -1,0 +1,105 @@
+
+\documentclass[preprint, 5p, authoryear, 12pt]{elsarticle}
+
+\journal{Futures}
+\usepackage{amsthm}
+\usepackage{amsbsy}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{mathtools}
+\usepackage[dvips]{lscape}
+\usepackage{hyperref}% this enables jumping from a reference and table of content in the pdf file to its target
+\usepackage{url}
+\usepackage{graphicx}
+\theoremstyle{plain}
+ \begin{document}
+
+\begin{frontmatter}
+ \title{Outline of an article on Anyons and Ising models }
+
+ 
+ \author[rvt]{Peadar Coyle\corref{cor1}}
+ \ead{peadarcoyle@googlemail.com}
+ 
+ \author[rvt]{Joost Slngerland}
+
+ 
+ 
+ 
+ \cortext[cor1]{Corresponding author}
+
+
+ 
+ 
+ 
+\begin{abstract}
+This is the beginnings of an outline  
+on Ising Anyons and the underlying Mathematics
+
+\begin{keyword}
+Topological Quantum Computation \sep Ising Anyons \sep TQFT \sep Category Theory \sep Fractional Quantum Hall Effect \sep Quantum Algebra
+\end{keyword}
+
+
+\end{abstract}
+
+
+\end{frontmatter}
+
+\section{Introduction}\label{sec1}
+While in classical mechanics the exchange of two identical particles does not change the underlying state, quantum mechanics 
+allows for more complicated behaviour. 2D quantum systems such as electrons confined between two semi-conductors or the superconductor based
+model proposed in \cite{Blueprint_TQC_2010}, can give rise to exotic particle statistics, where the exchange of two identical (quasi) particles 
+can in general be described by either Abelian or non-Abelian statistics. In the former, the exchange of two particles gives rise to a complex 
+phase factor $e^{i\theta}$, where $\theta\;=\;0,\pi$
+correspond to bosons and fermions respectively, and $\theta \;\neq\;0,\pi$
+is referred to as the statistics of Abelian anyons.
+\paragraph{} The statistics of non-Abelian anyons are described by $k\;\times\;k$ matrices acting on a \textit{degenerate sground state manifold}
+with k $> \;1$ Since in general, two such unitary matrices A,B do not commute - these matrices form a non-Abelian group, hence the name.
+\paragraph{} Anyons appear as emergent quasi-particles in fractional quantum Hall states and as excitations in microscopic models of frustrated
+quantum magnets that harbor topological quantum liquids. 
+It is proposed that for $\nu=\frac{5}{2}$ there will be Ising non-Abelian quasi particle statistics and $\nu=\frac{12}{5}$ there will be 
+Fibonacci anyons. The proposals for topological quantum computation (TQC), the braiding of non-Abelain anyons are used to perform the unitary
+transformations of a Q.C. See \cite{TQC_Review_2008} and references there in. 
+ Detailed explanations of the Fibonacci Anyon models are provided in \cite{2009arXiv0902.3275T} and the further more complicated Ising model
+is provided in \cite{Bomin2010PhRvL.105c0403B_IsingAnyons}. 
+Let us consider the more complicated Tambora-Yamagomi Theory based upon the work of \cite{etingof-2002}
+Expanation of 2D Quantum Systems
+\begin{itemize}
+\item Abelian Anyons
+\item Nonabelian Anyons
+\item Condensed Matter
+\item Introduction to Quantum Computaton - include references
+\end{itemize}
+
+\subsection{Algebra}
+This section is the sort of area my expertise may help the most with 
+since I know a lot of Maths now.
+\begin{itemize}
+\item Tensor Category Theory
+\item Fusion Rules
+\item Fibonacci Anyons
+\item Ising [similar to the $SU(2)_{k}$ that was mentioned
+\item Magmas and Groups, some reference to the Mathematical Structures
+\item Anyon models for finite groups
+\end{itemize}
+The Anyon Models for finite groups is ther real meat of this paper, since this 
+model hasn't been completely milked. 
+   \paragraph{} F Matrices and Pentagons/ R matrices  and Hexagons
+Golden chain formulation
+\begin{itemize}
+\item T-L Algebras 
+\item Jones Polynomials
+\item Heisenberg Interactions
+\end{itemize} 
+
+\subsection{Numerical Analysis}
+In the final section of the Fibonacci Intro, some numerical work and analytical work
+analyzing the collective ground states formed by a set of Fibonacci anyons in the presence of the generalized Heisenberg interactions. 
+\bibliographystyle{elsarticle-harv}
+
+\bibliography{CoAlgebras,Analysis}
+
+\end{document}

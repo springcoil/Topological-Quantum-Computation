@@ -1,0 +1,66 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsbsy}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{braket}
+\usepackage{hyperref}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage[dvips]{lscape}
+\usepackage{natbib}
+%opening
+\title{Functional Analysis Prerequisites for PDE 1 and PDE 2}
+\author{Peadar Coyle}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+
+                    
+                
+
+
+\begin{document}
+\maketitle
+\begin{abstract}
+ 
+\end{abstract}
+\section{Introduction}
+I made this list in contact with my Professor. 
+The purpose is to provide some sort of list, of the key and underlying Functional Analytic ideas for PDE,
+which we can then use.
+\begin{definition}[Metric Spaces]
+A '''metric space''' is an \textbf{ordered pair} $(M,d)$ where $M$ is a \textbf{non-empty}
+ set and $d$ is a \textbf{metric} on $M$, i.e., a function
+
+$d : M \times M \rightarrow \mathbb{R}<$
+
+such that for any $x, y, z\; \in \;M$, the following holds:
+\begin{itemize}
+\item $d(x,y) \ge 0$     ; (''non-negativity'') ,
+\item $d(x,y) = 0$ \textbf{if and only if} $x = y$ 
+\item $d(x,y) = d(y,x)$      (''symmetry'') and
+ \item $d(x,z) \le d(x,y) + d(y,z)$ (''\textbf{triangle inequality}'') .
+\end{itemize}
+The first condition follows from the other three, since:
+: $2d(x,y) = d(x,y) + d(y,x)\; \ge\; d(x,x) = 0.$
+
+The function $d$is also called ''distance function'' or simply ''distance''. 
+Often, $d$ is omitted and one just writes 
+$M$ for a metric space if it is clear from the context what metric is used.
+ 
+\end{definition}
+\cite{RudinFA}
+\begin{definition}
+ 
+\end{definition}
+
+\bibliography{PDE.bib}
+\bibliographystyle{plain}
+\end{document}

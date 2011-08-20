@@ -1,0 +1,346 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsbsy}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\def\Xint#1{\mathchoice
+{\XXint\displaystyle\textstyle{#1}}%
+{\XXint\textstyle\scriptstyle{#1}}%
+{\XXint\scriptstyle\scriptscriptstyle{#1}}%
+{\XXint\scriptscriptstyle\scriptscriptstyle{#1}}%
+\!\int}
+\def\XXint#1#2#3{{\setbox0=\hbox{$#1{#2#3}{\int}$ }
+\vcenter{\hbox{$#2#3$ }}\kern-.6\wd0}}
+\def\ddashint{\Xint=}
+\def\dashint{\Xint-}
+\usepackage{braket}
+\usepackage[dvips]{lscape}
+%opening
+\title{The Fourier Transform and PDE Notes}
+\author{Peadar Coyle}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+These are notes for both my Partial Differential Equations course and my MS324 Course.
+
+These notes can of course be used to revise the Fourier Transform. 
+The first Section has a rigorous analytic interpretation, the second section is more pragmatic and applied.
+
+\end{abstract}
+\section{The Fourier Transform}~\cite{Princeton}
+Let f be a function from $\mathbb{R}$ to $\mathbb{R}$. Typically, there is not much that one can
+say about f, but certain functions have usual symmetry properties. For instance f is called \textit{even}
+if f(-x) = f(x) for every x, and it is called \textit{odd} if f(-x) = f(x) for every x.
+Furthermore, every function f can be written as a \textit{superposition} of an even part $f_{e}$, and an
+odd part $f_{o}$.
+For instance, the function \begin{displaymath}
+                            f(x) = x^{3}+3x^{2}+3x+1
+                           \end{displaymath}
+ is neither even nor odd. However it can be decomposed into $f_{e}$=$3x^{2}+1$ and $
+                                    f_{o}=x^{3}+3x.$
+For a general function f, the decomposition is unique and is given by the formulas
+\begin{displaymath}
+ f_{e}(x)=\frac{1}{2}(f(x)+f(-x))
+\end{displaymath}
+and
+\begin{displaymath}
+ f_{o}(x)=\frac{1}{2}(f(x) - f(-x))
+\end{displaymath}
+What are the symmetry properties enjoyed by even and odd functions?
+A useful way to regards them is as follows. We have a group of two transformations of the real line:
+one is the identity map $t: x \rightarrow x$ and the other is the reflection map $p: x \rightarrow -x$.
+Now any transformation $\phi$ of the real line gives rise to a transformation function f, the transformed
+function is the function g(x)=f($\phi$(x)). In the case at hand, if $\phi$=t the the transformed function is
+just f(x), while if $\phi$=p then it is f(-x).
+%Could add more here if I ever get the time%
+For a more complicated example, let us fix an integer n and let us define a systematic way of decomposing 
+functions from $\mathbb{C}$ to $\mathbb{C}$, that is, complex-valued functions defined on the complex
+plane. If f is such a function, and j is an integer between 0 and n-1, then we say that f is a 
+\textit{harmonic of order j} if it hs the following property. Let $\omega=\exp(\frac{2\pi i}{n})$, so that $\omega$ is a 
+primitive $\textit{n}$th root of 1 (meaning that $\omega^{n}$=1 but no smaller positive power of $\omega$ gives
+1). Then f($\omega$z)=$\omega^{j}f(z)$ for every $z\in \mathbb{C}$. Notice that if n=2, then $\omega$=-1,
+so when j = 0 we recover the definition of an even function and when j = 1 we recover the definition of an odd
+function. In fact, inspired by this we can give a general formula for a decomposition of f into harmonics,
+which again turns out to be unique. If we define
+\begin{displaymath}
+ f_{j}(z)=\frac{1}{n} \sum\limits_{k=0}^{n-1}f(w^{k}z)w^{-jk} %Not sure how to write this - P205 IN THE PRINCETON COMPANION%
+\end{displaymath}
+then it is a simple exercise to prove that
+\begin{displaymath}
+ f(z) = \sum\limits_{j=0}^{n-1}f_{j}(z)
+\end{displaymath}
+for every z ( use the fact that $\sum\limits_{j}w^{-jk}$ = n if k = 0 and 0 otherwise), and that 
+$f_{j}(wz)=w^{j}f_{j}(z)$ for every z.
+Thus, f can be decomposed as a sum of harmonics. The group associated with this Fourier transform
+is the multiplicative group of the nth roots of unity 1,w,...,$w^{n-1}$, or the cyclic group of order n.
+The root $w^{j}$ is associated with the rotation of the complex plane through an angle of $\frac{2\pi j}{n}$.
+\paragraph*{} Now let us consider infinite groups. Let f be a complex-valued function defined on the unit
+circle $\mathbb{T} = {z \in \mathbb{C}:|z|=1}.$ To avoid technical issues we shall assume that f is 
+\textit{smooth} - that is, it is infinitely differentiable. Now if f is a function of the simple form
+$f(z) = cz^{n}$ for some integer n and some constant c, then f will have rotational symmetry of order
+n. That is, if $w = \exp(\frac{2\pi i}{n})$ again, then f(wz) = f(z) for all complex numbers z. After our
+earlier examples, it should come as no suprise that an arbitrary smooth function can be expressed as a 
+superposition of such rotationally symmetric functions. Indeed, one can write
+\begin{displaymath}
+ f(z) = \sum\limits_{n=-\infty}^{\infty}\hat{f}(n)z^{n},
+\end{displaymath}
+where the numbers $\hat{f}(n),$ called the \textit{Fourier coefficients} of f at the \textit{frequencies}
+n, are given by the formula
+\begin{displaymath}
+ \hat{f}(n) = \frac{1}{2\pi}\int_{0}^{2\pi}f(e^{i\theta})e^{i n\theta}d\theta.
+\end{displaymath}
+This formula can be thought of as the limiting case n $\rightarrow$ $\infty$ of the previous decomposition,
+restricted to the unit circle. It can be regarded as a generalization of the Taylor series expansion
+of a HOLOMORPHIC FUNCTION. If f is holomorphic on the closed unit disk 
+${z \in \mathbb{C}:|z|\leq 1},$ then one can write
+$f(z) = \sum\limits_{n=0}^{\infty}a_{n}z^{n},$
+where the \textit{Taylor coefficient} $a_{n}$ is given by the formula
+\begin{displaymath}
+ a_{n} = \frac{1}{2\pi i}\int_{|z|=1}\frac{f(z)}{z^{n+1}}dz
+\end{displaymath}
+In general, there are very strong links between Fourier Analysis and Complex Analysis~\cite{RudinAnalysis}.
+\section{A Pragmatic approach to the Fourier Transform}
+The aim of the next section is to take a less abstract and more Engineering or Pragmatic
+attitude to the Fourier transform.
+\textit{Aim: To illustrate several useful properties of the Fourier transform and to show how these
+properties can be used to solve PDEs. In particular, it is shown how the Fourier transform changes \textbf{differentiation}
+to \textbf{multiplication,} so differential equations change into algebraic equations.
+Also, the idea of the \textbf{infinite convolution} is introduced.}
+
+The Fourier transform f(x) for $-\infty < x < \infty$ is given by the formula
+\begin{equation}\label{Fourier_Transform}
+ \mathfrak{F}[f] = F(\xi) = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} f(x)\exp^{-i\xi x}dx
+\end{equation}
+That is, we start with a function f(x) defined on the real x-axis, substitute it into equation $^{\ref{Fourier_Transform}}$.
+A list of standard Fourier Transforms is found in any good Mathematical Methods or Engineering textbook.
+ 
+\textbf{Useful Properties of the Fourier Transform}
+\subsection{Property 1 (Fourier Transform Pair)}
+The Fourier transform of f(x), $-\infty < x < \infty$, produces a new function $F(\xi)$ definedd by the 
+formula
+\begin{displaymath}
+ \mathfrak{F}[f] = F(\xi) = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} f(x)\exp^{-i\xi x}dx
+\end{displaymath}
+and the \textit{inverse} Fourier transform of $F(\xi)$, $-\infty < x < \infty$ will reproduce
+the original function f(x) according to 
+\begin{displaymath}
+ \mathfrak{F}^{-1}[F] = f(x) \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} f(\xi)\exp^{-i\xi x}d\xi
+\end{displaymath}
+\subsection{Property 2 (Linear Transformation)}
+The Fourier transform is a linear transformation; that is 
+$\mathfrak{F}[af + bg] = a\mathfrak{F}[f] + b\mathfrak{F}[g]$
+This is easy to use, and can be verified quite easily. 
+Lets show an example:
+\begin{displaymath}
+ \frac{1}{x^{2}+1} + 3\exp^{-x^{2}}
+\end{displaymath}
+would be 
+\begin{displaymath}
+ \mathfrak{F}\left[\frac{1}{x^{2}+1}\right] + 3\mathfrak{F}\left[\exp^{-x^{2}}\right]
+\end{displaymath}
+\subsection{Property 3 (Transformation of Partial Derivatives)}
+When we discuss how derivatives transform, we must distinguish partial derivatives with respect to
+various variables. For isntance, if the Fourier transform transforms the x-variable (the variable of 
+integration in the transform) and if the function being transformed is a partial derivative of a function
+u(x,t) with respect to x, then the \textbf{rules of transformation are}
+\begin{displaymath}
+ \mathfrak{F}[u_{x}] = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} u_{x}(x,t)\exp^{-i\xi x} dx =
+i\xi\mathfrak{F}[u]
+\end{displaymath}
+ 
+\begin{displaymath}
+ \mathfrak{F}[u_{xx}] = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} u_{xx}(x,t)\exp^{-i\xi x} dx =
+-\xi^{2}\mathfrak{F}[u]
+\end{displaymath}
+On the other hand, if we transform the partial derivative $u_{t}(x,t)$ (and if the variable of integration
+in the transform is x), then the transform is given by 
+\begin{displaymath}
+ \mathfrak{F}[u_{t}]= \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} u_{t}(x,t)\exp^{-i\xi x} dx =
+\frac{\partial}{\partial t}\mathfrak{F}[u]
+\end{displaymath}
+\begin{displaymath}
+\mathfrak{F}[u_{tt}]= \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} u_{tt}(x,t)\exp^{-i\xi x} dx = \frac{\partial^{2}}{\partial t^{2}}\mathfrak{F}[u]
+\end{displaymath}
+\subsection{Property 4 (Convolution Property)}
+Every integral transform has what is called a \textit{convolution} property. The general idea is that
+the transform of a product of two functions f(x)g(x) is \textit{not} the product of individual transforms;
+that is, 
+\begin{displaymath}
+ \mathfrak{F}[f(x)g(x)] \neq \mathfrak{F}[f]\mathfrak{F}[g]
+\end{displaymath}
+However, in transform theory there is something called the convolution f * g of two functions
+which more or less plays the role of the product. What is true about the f * g is that 
+\begin{equation}\label{Convolution}
+ \mathfrak{F}[f*g] = \mathfrak{F}[f]\mathfrak{F}[g]
+\end{equation}
+So what is this mysterious f * g? It's given by the formula
+\begin{equation}\label{Conv}
+ (f * g)(x) = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}f(x-\xi)g(\xi)d\xi
+\end{equation}
+and it can be shown without too much trouble that Equation \ref{Convolution} holds. We see from the definition
+of the convolution that given two function f(x) and g(x), the convolution (f*g)(x) is a new function.
+\subsection{Example of a Convolution of Two Functions}
+Given the two functions 
+$f(x) = x$
+$g(x) = \exp^{-x^{2}}$
+the convolution is given by
+\begin{displaymath}
+ (f * g)(x) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{\infty} (x - \xi)\exp^{-\xi^{2}}d\xi
+\\ = x\\sqrt{2} (a new function)
+\end{displaymath}
+We have used the famous evaluation of a Gaussian formula
+$\int_{-\infty}^{\infty} e^{-\xi^{2}} d\xi$ = $\sqrt{\pi}$
+to arrive at this value. 
+   The importance of this convolution Equation:\ref{Conv} in applications is due to the fact that quite often,
+the final step in solving a PDE boils down to finding the inverse of some expression that we can 
+interpret as the product of two transforms $\mathfrak{F}[f]\mathfrak{F}[g];$ that is, we must find 
+\begin{equation}\label{fg}
+ \mathfrak{F^{-1}} \left\lbrace \mathfrak{F}[f]\mathfrak{F}[g] \right\rbrace
+\end{equation}
+by taking the inverse of each side of $^{\ref{Convolution}}$, we arrive at the result
+\begin{equation}
+ f * g = \mathfrak{F^{-1}}\left\lbrace\mathfrak{F}[f]\mathfrak{F}[g]\right\rbrace
+\end{equation}
+Hence to find Equation:\ref{fg}, all we have to do is find the inverse transform of \textit{each} factor to get f and g
+and \textit{then} compute their convolution.
+This can be used to solve an important problem in PDE theory. But this is beyond the scope of this article.
+\section{Laplace's Equation}
+The standard textbook for Graduate Mathematics PDE is of course ~\cite{Evans_PDE}
+\subsection{Fundamental solution}
+One good strategy for investigating any partial differential equation is first to identify some explicit
+solutions and then, provided the PDE is linear, to assemble more complicated solutions out of the specific
+ones previously noted. Furthermore, in looking for explicit solutions, it is often wise to restrict
+attention to classes of functions with certain symmetry properties. Since Laplace's equation is invariant
+under rotations, it consequently seems advisable to search first for \textit{radial} solutions, that
+is, functions of r = $|x|$.
+\paragraph{} Let us therefore attempt to find a solution u of Laplace's equation$^{\ref{Laplace}}$.
+\begin{equation}\label{Laplace}
+ \bigtriangleup u = 0
+\end{equation}
+in $U=\mathbb{R}^{n}$, having the form
+\begin{displaymath}
+ u(x) = v(r),
+\end{displaymath}
+where $r=\; |x|\;(x^{2}_{1}+...+x^{2}_{n})^{-1/2}$
+and v has to be selected (if possible) so that $\bigtriangleup u = 0$ holds.
+First note that for $i=1,...,n$ that
+\begin{displaymath}\frac{\partial r}{\partial x_{i}}=\frac{1}{2}(x^{2}_{1}+...+x^{2}_{n})^{-1/2}2x_{i}=\frac{x_{i}}{r}\;(x\neq 0).\end{displaymath}
+
+We thus have
+\begin{displaymath}
+ u_{x_{i}}=v'(r)\frac{x_{i}}{r},u_{x_{i}x_{i}} = v''(r)\frac{x^{2}_{i}}{r^{2}}+v'(r)\left(\frac{1}{r}-
+\frac{x^{2}_{i}}{r^{3}}\right)
+\end{displaymath}
+for $i=1,...,n,$ and so 
+\begin{displaymath}
+ \bigtriangleup u = v''(r)+\frac{n-1}{r}v'(r).
+\end{displaymath}
+Hence $\bigtriangleup u = 0$ if and only if
+\begin{equation}\label{LaplaceODE}
+ v'' + \frac{n-1}{r}v' = 0.
+\end{equation}
+If $v' \neq 0,$ we deduce by seperation of variables the solution to ODE (\ref{LaplaceODE}).
+\begin{displaymath}
+ \frac{v''}{v'}=-\frac{n-1}{r}
+\end{displaymath}
+\begin{displaymath}
+ ln|v'|=(1-n)ln r + c_{1}
+\end{displaymath}
+Hence \begin{displaymath}
+       \Rightarrow v'=\frac{c_{2}}{r^{n-1}}
+      \end{displaymath}
+We can thus get two results if r>0
+\begin{displaymath}
+ v(r)\; = \; C log r + D\; for\; n=2
+\end{displaymath}
+or
+\begin{displaymath}
+ n\geq 3 \; v(r)\;=\; \frac{C}{r^{n-2}}\; +\; D
+\end{displaymath}
+\subsection{Mean-value formulas}
+\begin{remark}
+$\dashint$ takes the definition of average from the appendix to Evans book. As is the rest of this section
+\cite{Evans_PDE} 
+\end{remark}
+ Consider now an open set $U \subset \mathbb{R}^{n}$ and suppose $u$ is a harmonic function within U.
+We next derive the important \textit{mean-value fomulas} which declare that $u(x)$ equals both the average
+of $u$ over the sphere $\partial B(x,r)$ and the average of $u$ over the entire ball B$(x,r)$, provided 
+B$(x,r)\;\subset\;U.$ These implicit formulas involving $u$ generate a remarkable number of consequences, as
+we will momentarily see. 
+\begin{theorem}[Mean-value formulas for Laplace's equation].
+ If $u\; \in\; C^{2}(U)$ is harmonic, then
+\begin{equation}
+ u(x) = \dashint_{\partial B(x,r)}u dS = \dashint_{B(x,r)}u dy
+\end{equation}
+for each ball $B(x,r)\;\subset\;U.$
+\end{theorem}
+We state this without proof, proof will be included in handwritten notes. 
+\begin{theorem}[Converse to mean-value property]
+ If $u\;\in\;C^{2}(U)$, satisfies 
+\begin{displaymath}
+ u(x) = \dashint_{\partial B(x,r)} u dS
+\end{displaymath}
+for each ball $B(x,r)\;\in\;U$, then u is harmonic.
+\end{theorem}
+
+\subsection{Properties of harmonic functions}
+There are a slew of interesting deductions about harmonic functions, all based upon the mean-value
+formulas. Assume for the following that $U\;\in\;\mathbb{R}^{n}$ is open and bounded. 
+\subsubsection{Strong maximum principle, uniqueness}
+We begin with the assertion that a harmonic function must attain its maximum on the boundary and cannot
+attain its maximum in the interior of a connected region unless it is constant.
+This makes physical sense, for instance a harmonic function modelling a Turkey at Christmas - if the outside
+of the turkey is cold = the inside of the turkey is cold. This clearly applies for a steady state system.
+\begin{theorem}[Strong maximum principle].
+ \begin{displaymath}
+  Suppose\;u\;\in\;C^{2}(U)\cap C(\bar{U})\;is\;harmonic\;within\;U.
+(i) Then
+\max_{\bar{U}} u = \max_{\partial U} u
+ \end{displaymath}
+(ii) Furthermore, if U is connected and there exists a point
+\begin{displaymath}
+ x_{0}\;\in\;U\; such\; that\;u(x_{0})\;=\;\max_{\bar{U}}\; u, 
+then \end{displaymath}
+u is constant within U
+Assertion (i) is the \textit{maximum principle} for Laplace's equation and 
+(ii) is the \textit{strong maximum principle}. 
+Replace u by -u, we recover similar assertions with 'min' replacing 'max'
+\end{theorem}
+\begin{proof}Suppose there exists a point $x_{0}\;\in\;U$ with $u(x_{0})=M:=\max_{\bar{U}}u.$
+Then for $0 < r < dist(x_{0},\partial U$), the mean value property assets
+\begin{displaymath}
+ M = u(x_{0})=\dashint_{B(x_{0},r)}u\;dy\; \leq\; M.
+\end{displaymath}
+An equality holds only if u $\equiv$ M within $B(x_{0},r)$, we see u(y) = M for all 
+$y\;\in\;B(x_{0},r).$. Hence the set ${x\;\in\;U|u(x)=M}$ is both open and relatively closed in U and 
+thus equals U if U is connected. This proves assertion (ii) from which (i) follows. 
+\end{proof}
+\subsection{Green's function}
+Assume now $U\;\subset\;\mathbb{R}^{n}$ is open, bounded and $\partial U$ is $C^{1}$. We propose
+next to obtain a general representation formula for the solution of Poisson's equation
+\begin{displaymath}
+ -\bigtriangleup u\;=\;f\;\;in\;U,
+\end{displaymath}
+subject to the prescribed boundary condition
+\begin{displaymath}
+ u\;=\;g\;\;on\;\partial U.
+\end{displaymath}
+We can then go onto the Derive the Green's function - however that can wait. 
+\newpage
+\bibliographystyle{plain}
+\bibliography{PDE.bib}
+\end{document}
