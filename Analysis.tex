@@ -1,0 +1,2300 @@
+\documentclass[preprint, 5p, 10pt]{elsarticle}
+
+\journal{Personal Notes}
+
+\parindent=.25in
+\parskip=2ex
+
+
+\usepackage{amsthm}
+\usepackage{amsbsy}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{mathtools}
+\usepackage[dvips]{lscape}
+\usepackage{hyperref}% this enables jumping from a reference and table of content in the pdf file to its target
+\usepackage{url}
+\usepackage{graphicx}
+\theoremstyle{plain}
+\newtheorem{defn}{Definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+\def\<{\langle}
+\def\>{\rangle}
+\def\id{\bold 1}
+\def\R{\Bbb R}
+\def\C{\Bbb C}
+\def\N{\Bbb N}
+\def\Z{\Bbb Z}
+
+\def\sign{\operatorname{sign}}
+\newcommand{\Cal}[1]{ \ensuremath{\mathcal{#1}}}                    
+\newcommand{\x}{\ensuremath{\times}} 
+% Because of conflicts, \space and \mathop are converted to
+% \itexspace and \operatorname during preprocessing.
+
+% itex: \space{ht}{dp}{wd}
+%
+% Height and baseline depth measurements are in units of tenths of an ex while
+% the width is measured in tenths of an em.
+\makeatletter
+\newdimen\itex@wd%
+\newdimen\itex@dp%
+\newdimen\itex@thd%
+\def\itexspace#1#2#3{\itex@wd=#3em%
+\itex@wd=0.1\itex@wd%
+\itex@dp=#2ex%
+\itex@dp=0.1\itex@dp%
+\itex@thd=#1ex%
+\itex@thd=0.1\itex@thd%
+\advance\itex@thd\the\itex@dp%
+\makebox[\the\itex@wd]{\rule[-\the\itex@dp]{0cm}{\the\itex@thd}}}
+\makeatother
+
+% \tensor and \multiscript
+\makeatletter
+\newif\if@sup
+\newtoks\@sups
+\def\append@sup#1{\edef\act{\noexpand\@sups={\the\@sups #1}}\act}%
+\def\reset@sup{\@supfalse\@sups={}}%
+\def\mk@scripts#1#2{\if #2/ \if@sup ^{\the\@sups}\fi \else%
+  \ifx #1_ \if@sup ^{\the\@sups}\reset@sup \fi {}_{#2}%
+  \else \append@sup#2 \@suptrue \fi%
+  \expandafter\mk@scripts\fi}
+\def\tensor#1#2{\reset@sup#1\mk@scripts#2_/}
+\def\multiscripts#1#2#3{\reset@sup{}\mk@scripts#1_/#2%
+  \reset@sup\mk@scripts#3_/}
+\makeatother
+
+% \slash
+\makeatletter
+\newbox\slashbox \setbox\slashbox=\hbox{$/$}
+\def\itex@pslash#1{\setbox\@tempboxa=\hbox{$#1$}
+  \@tempdima=0.5\wd\slashbox \advance\@tempdima 0.5\wd\@tempboxa
+  \copy\slashbox \kern-\@tempdima \box\@tempboxa}
+\def\slash{\protect\itex@pslash}
+\makeatother
+
+% math-mode versions of \rlap, etc
+% from Alexander Perlis, "A complement to \smash, \llap, and lap"
+%   http://math.arizona.edu/~aprl/publications/mathclap/
+\def\clap#1{\hbox to 0pt{\hss#1\hss}}
+\def\mathllap{\mathpalette\mathllapinternal}
+\def\mathrlap{\mathpalette\mathrlapinternal}
+\def\mathclap{\mathpalette\mathclapinternal}
+\def\mathllapinternal#1#2{\llap{$\mathsurround=0pt#1{#2}$}}
+\def\mathrlapinternal#1#2{\rlap{$\mathsurround=0pt#1{#2}$}}
+\def\mathclapinternal#1#2{\clap{$\mathsurround=0pt#1{#2}$}}
+
+% Renames \sqrt as \oldsqrt and redefine root to result in \sqrt[#1]{#2}
+\let\oldroot\root
+\def\root#1#2{\oldroot #1 \of{#2}}
+\renewcommand{\sqrt}[2][]{\oldroot #1 \of{#2}}
+
+% Manually declare the txfonts symbolsC font
+\DeclareSymbolFont{symbolsC}{U}{txsyc}{m}{n}
+\SetSymbolFont{symbolsC}{bold}{U}{txsyc}{bx}{n}
+\DeclareFontSubstitution{U}{txsyc}{m}{n}
+
+% Manually declare the stmaryrd font
+\DeclareSymbolFont{stmry}{U}{stmry}{m}{n}
+\SetSymbolFont{stmry}{bold}{U}{stmry}{b}{n}
+
+% Declare specific arrows from txfonts without loading the full package
+\makeatletter
+\def\re@DeclareMathSymbol#1#2#3#4{%
+    \let#1=\undefined
+    \DeclareMathSymbol{#1}{#2}{#3}{#4}}
+\re@DeclareMathSymbol{\neArrow}{\mathrel}{symbolsC}{116}
+\re@DeclareMathSymbol{\neArr}{\mathrel}{symbolsC}{116}
+\re@DeclareMathSymbol{\seArrow}{\mathrel}{symbolsC}{117}
+\re@DeclareMathSymbol{\seArr}{\mathrel}{symbolsC}{117}
+\re@DeclareMathSymbol{\nwArrow}{\mathrel}{symbolsC}{118}
+\re@DeclareMathSymbol{\nwArr}{\mathrel}{symbolsC}{118}
+\re@DeclareMathSymbol{\swArrow}{\mathrel}{symbolsC}{119}
+\re@DeclareMathSymbol{\swArr}{\mathrel}{symbolsC}{119}
+\re@DeclareMathSymbol{\nequiv}{\mathrel}{symbolsC}{46}
+\re@DeclareMathSymbol{\Perp}{\mathrel}{symbolsC}{121}
+\re@DeclareMathSymbol{\Vbar}{\mathrel}{symbolsC}{121}
+\re@DeclareMathSymbol{\sslash}{\mathrel}{stmry}{12}
+\re@DeclareMathSymbol{\invamp}{\mathrel}{symbolsC}{77}
+\re@DeclareMathSymbol{\parr}{\mathrel}{symbolsC}{77}
+\makeatother
+
+% Widecheck
+\makeatletter
+\DeclareRobustCommand\widecheck[1]{{\mathpalette\@widecheck{#1}}}
+\def\@widecheck#1#2{%
+    \setbox\z@\hbox{\m@th$#1#2$}%
+    \setbox\tw@\hbox{\m@th$#1%
+       \widehat{%
+          \vrule\@width\z@\@height\ht\z@
+          \vrule\@height\z@\@width\wd\z@}$}%
+    \dp\tw@-\ht\z@
+    \@tempdima\ht\z@ \advance\@tempdima2\ht\tw@ \divide\@tempdima\thr@@
+    \setbox\tw@\hbox{%
+       \raise\@tempdima\hbox{\scalebox{1}[-1]{\lower\@tempdima\box
+\tw@}}}%
+    {\ooalign{\box\tw@ \cr \box\z@}}}
+\makeatother
+
+% udots (taken from yhmath)
+\makeatletter
+\def\udots{\mathinner{\mkern2mu\raise\p@\hbox{.}
+\mkern2mu\raise4\p@\hbox{.}\mkern1mu
+\raise7\p@\vbox{\kern7\p@\hbox{.}}\mkern1mu}}
+\makeatother
+%% Fix array
+\newcommand{\itexarray}[1]{\begin{matrix}#1\end{matrix}}
+%% \itexnum is a noop
+\newcommand{\itexnum}[1]{#1}
+
+%% Renaming existing commands
+\newcommand{\underoverset}[3]{\underset{#1}{\overset{#2}{#3}}}
+\newcommand{\widevec}{\overrightarrow}
+\newcommand{\darr}{\downarrow}
+\newcommand{\nearr}{\nearrow}
+\newcommand{\nwarr}{\nwarrow}
+\newcommand{\searr}{\searrow}
+\newcommand{\swarr}{\swarrow}
+\newcommand{\curvearrowbotright}{\curvearrowright}
+\newcommand{\uparr}{\uparrow}
+\newcommand{\downuparrow}{\updownarrow}
+\newcommand{\duparr}{\updownarrow}
+\newcommand{\updarr}{\updownarrow}
+\newcommand{\gt}{>}
+\newcommand{\lt}{<}
+\newcommand{\map}{\mapsto}
+\newcommand{\embedsin}{\hookrightarrow}
+\newcommand{\Alpha}{A}
+\newcommand{\Beta}{B}
+\newcommand{\Zeta}{Z}
+\newcommand{\Eta}{H}
+\newcommand{\Iota}{I}
+\newcommand{\Kappa}{K}
+\newcommand{\Mu}{M}
+\newcommand{\Rho}{P}
+\newcommand{\Tau}{T}
+\newcommand{\Upsi}{\Upsilon}
+\newcommand{\omicron}{o}
+\newcommand{\lang}{\langle}
+\newcommand{\rang}{\rangle}
+\newcommand{\Union}{\bigcup}
+\newcommand{\Intersection}{\bigcap}
+\newcommand{\Oplus}{\bigoplus}
+\newcommand{\Otimes}{\bigotimes}
+\newcommand{\Wedge}{\bigwedge}
+\newcommand{\Vee}{\bigvee}
+\newcommand{\coproduct}{\coprod}
+\newcommand{\product}{\prod}
+\newcommand{\closure}{\overline}
+\newcommand{\integral}{\int}
+\newcommand{\doubleintegral}{\iint}
+\newcommand{\tripleintegral}{\iiint}
+\newcommand{\quadrupleintegral}{\iiiint}
+\newcommand{\conint}{\oint}
+\newcommand{\contourintegral}{\oint}
+\newcommand{\infinity}{\infty}
+\newcommand{\bottom}{\bot}
+\newcommand{\minusb}{\boxminus}
+\newcommand{\plusb}{\boxplus}
+\newcommand{\timesb}{\boxtimes}
+\newcommand{\intersection}{\cap}
+\newcommand{\union}{\cup}
+\newcommand{\Del}{\nabla}
+\newcommand{\odash}{\circleddash}
+\newcommand{\negspace}{\!}
+\newcommand{\widebar}{\overline}
+\newcommand{\textsize}{\normalsize}
+\renewcommand{\scriptsize}{\scriptstyle}
+\newcommand{\scriptscriptsize}{\scriptscriptstyle}
+\newcommand{\mathfr}{\mathfrak}
+\newcommand{\statusline}[2]{#2}
+\newcommand{\tooltip}[2]{#2}
+\newcommand{\toggle}[2]{#2}
+
+\begin{document}
+\begin{frontmatter}
+ \title{Research Document}
+\author{Peadar Coyle}
+\address{ 18 Cottage Road \\
+Newry \\
+County Down}
+ 
+\maketitle
+\begin{abstract}
+
+Various parts of Mathematics are included in this ongoing research document. 
+The aim being to synthesize lots and lots of areas.
+
+
+\begin{keyword}
+Mathematics \sep Topology \sep Analysis \sep Manifolds\sep Geometr
+\end{keyword}
+
+
+\end{abstract}
+
+
+\tableofcontents
+\end{frontmatter}
+\section{Braids and Anyons}
+\subsection{Braids}
+We begin by giving an informal introduction, intended to give the reader an
+intuitive understanding of braids.
+The theory of braids has been studied since the early 1920’s, founded by Emil
+Artin, a German mathematician (in his original paper “Theorie der
+\textit{Zopfe}” from 1925). Though his studies were initially motivated by the geometric
+constructions of braids, it was not long before the powerful algebra behind braid
+theory became evident. Since then the theory has branched out into many fields
+of application, from encryption to solving polynomial equations. However, the
+study of braids in themselves is mathematically both rich and deep, being an
+extension of a concept that even a child can understand. We begin by giving an
+intuitive description of braids, to help motivate our definitions and ideas later
+on. So, what is a braid? Essentially, a braid is a geometric object that can, after
+some work, be viewed algebraically. We begin by taking a unit cube, and in it
+we place n strands of string, subject to the following conditions:
+\begin{enumerate}
+\item No part of any strand lies outside the cube.
+\item Each strand begins on the top face of the cube, and ends on the bottom
+face.
+\item No two strands intersect.
+\item As we traverse any strand from the top face, we are always moving down-
+wards. This means that no strand has any horizontal segment, or any
+segment that ‘loops up’.
+\end{enumerate}
+The resulting collection of strands is called an n-braid. Now,
+given this loose definition of a braid, we can develop some sort of equivalence of
+braids. Given an n-braid $\beta$ (in the unit cube) we say it is equivalent to another
+n-braid $\beta '$ if the strands of $\beta$ can be perturbed to the strands of $\beta ′$ without doing
+any of the following:
+\begin{enumerate}
+\item Moving any part of any strand out of the cube.
+\item Cutting any strand.
+\item Moving any endpoint of any strand.
+\end{enumerate}
+Lets write a formal definition of a braid. 
+\begin{definition} Consider two parallel planes A and B in $\mathbb{R}^{3}$ , each containing
+n distinct points ${a_i }$ and ${b_i }$ respectively. Then an n-strand braid is a
+collection of n curves ${x_i }$ such that:
+\begin{enumerate}
+\item Each $x_i$ has one endpoint at an $a_i$ and an endpoint at a $b_i$ .
+\item All the $x_i$ are pairwise disjoint.
+\item Every plane parallel to A and B intersects each of the $x_i$ at one point
+or not at all.
+\end{enumerate}
+\end{definition}
+There are several ways to think of braids. Perhaps the most intuitive is
+by imagining a number of strings attached at even intervals to a pole, then
+pulled out in a given direction and woven about one another. This follows
+our definition closely (and should seem natural to anyone who has braided
+long hair). Alternatively, one can imagine the paths traversed by n particles
+in a plane. To be more specific, suppose n particles are initially positioned
+at the points $(0, 1, 0), (0, 2, 0), . . . , (0, n, 0)\; \in \;\mathbb{R}^{3}$ , and let them move around
+along the trajectories
+\begin{equation}
+a_{1}(t),a_2(t),...,a_i(t)\in \mathbb{R}^{3}
+\end{equation}
+A braid then is the trace of these trajectories $a = (a_1(t), a_2(t), . . . , a_n(t)), 
+0 \;\leq \;t \;\leq \;1$ with the conditions that the particles do not collide $(i.e. a_i (t_1 ) = a_j (t_2 )\; if\;
+i = j$ for any $t_1 , t_2 )$, that they end at the points $(1, 1, 0), (1, 2, 0), . . . , (1, n, 0), $
+and they do not move in the negative direction along the x-axis. For 
+simplicity we can assume that they end at x = 1 with the y coordinates possibly
+permuted, so that we have the following:
+$a_i (0) = (0, i), a_i (1) = (1, j(i))$ where $j(i) \in {1, 2, . . . , n}$
+and $j(i) = j(i′ )$ for $i = i′$ .
+Now that we have a definition of our basic object of study, we
+will discuss a few basic properties of braids, such as what it means for two
+braids to be equivalent. We will then show that braids form a group under
+the operation of concatenation. This group is called the Artin braid group.
+It can be defined using simple generators and relations and has many inter-
+esting algebraic properties. Once we have described the braid group we will
+construct a correspondence between braids and knots and demonstrate how
+the Jones polynomial for knots can be derived from a representation of the
+corresponding braid group.
+
+\subsection{Anyons}
+Specifically these notes are from \cite{2009arXiv0902.3275T} and Wang, Z.
+  We'll only consider the section on R-matrix and hexagons. Given n anyons $Y_i$ in a surface S, well-seperated at fixed lcations $p_i$
+, we may consider the ground states V(S;$p_i$,$Y_i$) ofthis quantum system. Since an energy gap in an anyonic systemn is always assumed, if two
+well-seperated anyons $Y_i,Y_j$ are exchanged slowly enough, the system will remain in the ground states manifold $V(S;p_i,Y_i).$ If $\ket{\Psi_{0}}$
+$\in\;V(S;p_i,Y_i)$ is the initial ground state, then after the exchange, or the braiding of the two anyons $Y_i,Y_j$ in mathematical parlor,
+the system will be in another ground state $\ket{\Psi_{1}}= {\Sigma}_i b_ie_i$ in $V(S;p_i,Y_i),$ where $e_i$ is an orthonormal basis of the ground states manifold 
+$V(S;p_i,Y_i).$ When $\ket{\Psi_0}$ runs over the basis $e_i$, we obtain a unitary matrix $R_{i,j}$ from $V(S;p_i,Y_i).$  to itself. In mathematical
+terms, we obtain a representation of the mapping class group of the punctured surface S. If S is the disk,the mapping class group is called 
+the braid group. In a nice basis of $V(S;p_i,Y_i),$ the braiding matrix $R_{i,j}$ becomes diagonal.
+\paragraph{} To describe braidings carefully, we need a pictorial representation. Which is beyond my current Latexing skills.   
+\subsection{References}
+\begin{enumerate}
+\item Wang, Z. Topological quantum computation. (Published for the Conference Board of the Mathematical Sciences by the American Mathematical Society: 2010).at (GoogleBooks\url{http://books.google.com/books?id=jkzVwceFaAsC})
+\end{enumerate}
+\section{Differential Calculus}
+In all these Notes unless otherwise specified, we will consider \textit{real} normed vector spaces. Recall that if E and F are two such
+spaces, L(E,F) denotes the linear space of continuous linear maps from E to F. The space L(E,F) is endowed with the norm 
+$\|u\| = sup_{\|x\|\leq 1}\|u(x)\|$. Here, u $\in\;L(E,F)$,x $\in$ E
+\subsection{measure space}
+
+\subsubsection*{{Context}}
+
+\hypertarget{measure_and_probability_theory_2}{}\paragraph*{{Measure and probability theory}}\label{measure_and_probability_theory_2}
+
+!include measure theory - contents
+
+\hypertarget{measure_spaces_3}{}\section*{{Measure spaces}}
+
+
+
+\hypertarget{idea_4}{}\subsection*{{Idea}}
+
+Measure spaces are used in the general theory of measure and integration, somewhat analogous to the role played by topological spaces in the study of continuity.
+
+For the general theory of measure spaces, we first need a \emph{measurable space} $(X, \Sigma)$, that is a set equipped with a collection $\Sigma$ of \textbf{measurable sets} complete under certain operations. Then this becomes a measure space $(X, \Sigma, \mu)$ by throwing in a function $\mu$ from $\Sigma$ to the a space of values (such as the real line) that gets along with the set-theoretic operations that $\Sigma$ has. If $E$ is a measurable set, then $\mu(E)$ is called the \textbf{measure} of $E$ with respect to $\mu$.
+
+\hypertarget{notation_5}{}\subsection*{{Notation}}\label{notation_5}
+
+The original notation for an integral (going back to Gottfried Leibniz) was
+
+\begin{equation}
+\int_a^b f(x) \mathrm{d}x
+\label{Leibniz}\end{equation}
+(where $f(x)$ would be replaced by some formula in the variable $x$). In modern measure theory, we can now understand this as the integral of the measurable function $f$ on the interval $[a,b]$ relative to Lebesgue measure. If we wish to generalise from Lebesgue measure to an arbitrary measure $\mu$ and generalise from $[a,b]$ to an arbitrary measurable set $S$, then we can write
+
+\begin{equation}
+\int_S f(x) \mu(\mathrm{d}x)
+\label{full}\end{equation}
+instead. Now, if $f$ is not given by a formula, then there is no need for the dummy variable $x$, which gives
+
+\begin{equation}
+\int_S f \mu .
+\label{simple}\end{equation}
+However, it has been more common to keep the symbol ‘$\mathrm{d}$’ and write
+
+\begin{equation}
+\int_S f \mathrm{d}\mu .
+\label{excessive}\end{equation}
+(Note that ‘$\mathrm{d}$’ can be read as `{}with respect to'{} in both \eqref{Leibniz} and \eqref{excessive}, although meaning different things; in the former case, it indicates the dummy variable, while in the latter case, it indicates the measure.) This notation then leads to replacing \eqref{full} with
+
+\begin{equation}
+\int_S f(x) \mathrm{d}\mu(x) .
+\label{switched}\end{equation}
+This last notation, however, hides the fact that integrating a function with respect to a measure is a way of multiplying a function by a measure to get a new measure; the integral of $f$ on $S$ with respect to $\mu$ is simply the measure of $S$ with respect to $f \mu$, as can be seen in \eqref{simple}.
+
+See \href{http://groups.google.com/group/sci.math.research/browse_thread/thread/e28593bfd6b83aac/67a61d19e8f4d57f}{Usenet discussion}, and contrast \eqref{switched} with the \href{http://secure.wikimedia.org/wikipedia/en/wiki/Stieltjes_integral}{Stieltjes integral}. The notation \eqref{simple} has also been used in an introductory graduate-level course by John Baez.
+
+It is also possible to take the entire expression ‘$\mathrm{d}\mu$’ as the name of the measure, writing $\mathrm{d}\mu(A)$ even where the common notation is $\mu(A)$. In that case, the common expression \eqref{excessive} is literally the same as (what would otherwise be) \eqref{simple}, although \eqref{switched} is not quite the same as (what would otherwise be) \eqref{full}.
+
+There is also some variation in notation as to whether to use a roman ‘$\mathrm{d}$’ or an italic ‘$\mathit{d}$’; roman is more common in England and italic in America. But of course, that variation should not cause any difficulties!
+
+\hypertarget{definitions_6}{}\subsection*{{Definitions}}\label{definitions_6}
+
+A \textbf{measure space} is a measurable space equipped with a measure. There are many different kinds of measures; we start with the most specific and then consider generalisations. The motivating example is Lebesgue measure on the real line.
+
+Let $(X, \Sigma)$ be a measurable space. A \textbf{probability measure} on $X$ (due to Kolmogorov) is a function $\mu$ from the collection $\Sigma$ of measurable sets to the unit interval $[0,1]$ such that:
+
+\begin{enumerate}%
+\item The measure of the empty set is zero: $\mu(\emptyset) = 0$;
+\item The measure of the entire space is one: $\mu(X) = 1$;
+\item Countable additivity: $\mu(\bigcup_{i = 1}^{\infty} S_i) = \sum_{i=1}^{\infty} \mu(S_i)$ whenever the $S_i$ are mutually disjoint sets|disjoint.
+
+\end{enumerate}
+(Part of the latter condition is the requirement that the sum on the right-hand side must converge.)
+
+It is sometimes stated (but in fact follows from the above) that:
+
+\begin{itemize}%
+\item Finitary additivity: $\mu(S \cup T) = \mu(S) + \mu(T)$ whenever $S$ and $T$ are disjoint.
+\item $\mu$ is increasing: $\mu(A) \leq \mu(B)$ if $A \subseteq B$.
+
+\end{itemize}
+The first of these conditions will follow for all of the generalised notions of measure below, but the others usually will not.
+
+Eric: Is there some nice ``{}arrow theoretic''{} way to state the above? It seems to be screaming to be a functor or an internalization or something.
+
+Eric: The ``{}products''{} $\bigcup$ and $\sum$ look like they should be ``{}products''{} in two different categories. Is that silly?
+
+John Baez: $\bigcup$ is less like a ``{}product''{} than a ``{}sum''{} ---{} also known as a coproduct. The collection of subsets of $X$ is a poset, which is a kind of category, and the union of a bunch of subsets can be seen as their coproduct in this category. Unfortunately I don'{}t see a great way to understand the sum of real numbers as a coproduct! So, I can'{}t quite do what I think you'{}re hoping for.
+
+\emph{Toby}: Well, they are still operations that make both $\Sigma$ and $\mathbf{R}^+$ into monoidal categories; since they'{}re also posets, this makes them monoidal posets. We can talk about countable additivity using transfinite composition. I doubt that this adds much to the theory of measure spaces, but it points the way to some of the generalisation below, as well to possibilities for categorification.
+
+\hypertarget{generalisations_7}{}\subsubsection*{{Generalisations}}\label{generalisations_7}
+
+From now on, we drop (2); the next step is to generalise the target of $\mu$, as follows:
+
+\begin{itemize}%
+\item Use $\mathbf{R} = ]-\infty,\infty[$ for a \textbf{finite measure}.
+\item Use $[0,\infty]$ (instead of $[0,1]$) for a \textbf{positive measure}.
+\item Use $]-\infty,\infty]$ for a \textbf{signed measure}.
+\item Use $\mathbf{C}$ for a \textbf{complex-valued measure}.
+\item Use an arbitrary topological vector space $V$ for a \textbf{$V$-valued measure}.
+\item In principle, one could go further yet; $V$ just needs an analogue of addition with a notion of countable sum. But until someone suggests a useful example, we will leave this to the centipede mathematics|centipedes.
+
+\end{itemize}
+Some futher terms:
+
+\begin{itemize}%
+\item We can combine conditions; for example a \textbf{finite positive measure} takes values in $[0,\infty[$.
+\item A measure is \textbf{bounded} if, for some (finite) real number $M$, $-M \leq \mu(S) \leq M$ for every measurable set $S$.
+\item A measure is \textbf{$\sigma$-finite} if every measurable set is a union of countable many sets with finite measure.
+
+\end{itemize}
+Remarks:
+
+\begin{itemize}%
+\item The property that $\mu$ is increasing follows for all types of measure with `{}positive'{} in the name but may fail for the others.
+\item A positive measure that satisfies (2) must be a probability measure as defined earlier; that is, it satisfies $\mu(S) \leq 1$ for all $S$.
+\item When $\infty$ is allowed as a value of $\mu$, then the requirement in (3) that the sum converges should be interpreted in this light; that is, the sum may diverge to infinity. (For a positive measure, therefore, there is no convergence criterion at all.)
+\item Notice that $-\infty$ is not allowed as a value for a signed measure. It works just as well to allow $-\infty$ and forbid $\infty$. It is even possible to allow both, but this is a little trickier, so we deal with it later.
+
+\end{itemize}
+Another possibility is to generalise the source of $\mu$; instead of using a $\sigma$-algebra on $X$, we could use a $\sigma$-ring or even a $\delta$-ring. These versions are mostly more about changing the definition of measurable space, so refer there for details of the definition; however, we note that (3), when $\Sigma$ is a $\delta$-ring, should state that the left-hand side exists (that is, the union is measurable) if the right-hand side converges. Generalise $\Sigma$ in this way is complementary to generalising the target above; in particular it may allow one to avoid dealing with $\infty$. For example, while Lebesgue measure is only a positive measure on a $\sigma$-algebra, it is a \emph{finite} positive measure on the $\delta$-ring of bounded measurable sets. Indeed, every signed measure gives rise to finite measure on its $\delta$-ring of finitely measurable sets (defined below); conversely, every $\sigma$-finite measure can be recovered from this by imposing (3) in all cases.
+
+Yet another possibility is to drop countable additivity, replacing it with finite additivity. The result is a \textbf{finitely-additive measure}, sometimes called a \textbf{charge} to avoid the red herring principle. For a charge, one could replace $\Sigma$ with an algebra (or even a ring) of sets; again see measurable space for these definitions.
+
+Finally, an \textbf{extended measure} takes values in the set $[-\infty,\infty]$ of extended real numbers. Here we have the problem that, even when considering finite additivity, we might have to add $\infty$ and $-\infty$. While we might simply require that this never happens (so that at least one of $\mu(S)$ and $\mu(T)$ must be finite if they have opposite signs and $S \cap T = \empty$), this is not include some examples that we want. To deal with this, we define an extended measure to be a formal difference $\mu^+ - \mu^-$ of positive measures; $\mu(S) = \mu^+(S) - \mu^-(S)$ whenever this is not of the form $\infty - \infty$ and is otherwise underfined. Note that the set of extended measures on $X$ is a quotient set of the set of pairs of positive measures; we say that $\mu = \nu$ if $\mu(S) = \nu(S)$ whenever either side is defined, that is if they are the same as partial functions from $S$ to $[-\infty,\infty]$.
+
+\hypertarget{constructive_theory_8}{}\subsubsection*{{Constructive theory}}\label{constructive_theory_8}
+
+In Henry Cheng'{}s constructive mathematics|constructive theory of measure, the definition of measurable space becomes more complicated; the main point is that a single measurable set $S$ is replaced by a \emph{complemented pair} $(S,T)$. Once that is understood, very little needs to be changed to define a measure space.
+
+In the requirements (1--{}3), the constants $\empty$ and $X$ and the operation $\union$ are interpreted by formal de Morgan duality, as explained at measurable space. The convergence requirement in (3) should be interpreted in the strong sense of located convergence and is no longer trivial for general positive measures. We must add a further requirement to enforce the idea that $\mu(S,T)$ is the measure of $S$ alone, as follows:
+
+\begin{itemize}%
+\item $\mu(S,T) = \mu(S,U)$ whenever $(S,T)$ and $(S,U)$ are both complemented pairs.
+
+\end{itemize}
+In general, a \emph{measurable set} is any set $S$ such that $(S,T)$ is a complemented pair for some set $T$; the term `{}measurable set'{} in the classical theory should be interpreted as either `{}mesurable set'{} or `{}complemented pair'{} in the constructive theory, depending on context. Usually both interpretations will actually work, but often only the first set of the pair will matter, thanks to the axiom above.
+
+We will mention other occasional fine points in the constructive theory when they occur; the main outline does not change.
+
+I need to check Bishop \& Bridges to see if there are any other changes, but I don'{}t think so; that is, I went through the following, and it all seems correct as it is. ---{}Toby
+
+\hypertarget{subsidiary_definitions_9}{}\subsubsection*{{Subsidiary definitions}}\label{subsidiary_definitions_9}
+
+Given a measure space $(X,\Sigma,\mu)$, a \textbf{$\mu$-null $\Sigma$-measurable set} is a measurable set $N$ such that $\mu(S) = 0$ whenever $S \subseteq N$ is measurable; a \textbf{$\mu$-null set} is any subset of a null measurable set. In a positive measure space, we don'{}t have to bother with $S$; $N$ will be a null measurable set as long as $\mu(N) = 0$.
+
+A \textbf{$\mu$-full $\Sigma$-measurable set} is a measurable set $F$ such that $\mu(S) = \mu(S \cap F)$ for every measurable set $S$; a \textbf{$\mu$-full set} is any superset of a full measurable set. In a probability measure space, we don'{}t have to bother with $S$; $F$ will be a full set as long as $\mu(F) = 1$. Classically, a full set is precisely the complement of a null set, but this doesn'{}t hold in the constructive theory.
+
+A property of elements of $X$ holds \textbf{$\mu$-almost everywhere} if the set of values where it holds is a full set.
+
+A measure is \textbf{complete} if every full set is measurable. We may form the \textbf{completion} of a measure space by accepting as a measurable set the intersection of any set and a full set; these \textbf{$\mu$-measurable sets} will automatically form a $\sigma$-algebra (or whatever $\Sigma$ originally was). Classically, a measure is complete if and only if every null set is measurable and a set is $\mu$-measurable if and only if it is the symmetric difference between a measurable set and a null set.
+
+A \textbf{$\mu$-finitely measurable set} is a measurable set $M$ such that $\mu(S)$ is finite whenever $S \subseteq M$ is measurable; a \textbf{$\sigma$-finitely measurable set} is any union of countably many finitely measurable sets. Again, we don'{}t have to bother with $S$ in a positive measure space. Note that a measure space is ($\sigma$)-finite if and only if every measurable set is ($\sigma$)-finitely measurable. The finitely measurable sets form a $\delta$-ring, and the $\sigma$-finitely measurable sets form a $\sigma$-ring.
+
+Recall that a $\Sigma$-measurable function from $(X,\Sigma)$ to some other measurable space is any function $f$ such that the preimage under $f$ of a measurable set is always measurable (or something more complicated in the constructive theory). Now that we have a measure space, let a \textbf{$\mu$-measurable function} be a partial function $f$ from $X$ to some other measurable space such that the domain of $f$ is full and the preimage under $f$ of a measurable set is always $\mu$-measurable (that is measurable in the completion of $\mu$), and let two such functions be \textbf{$\mu$-equivalent} if their equaliser is a full set. We are really interested in the quotient set under this equivalence and so identify equivalent $\mu$-measurable functions. Classically, every $\mu$-measurable function is equivalent to some (total) $\Sigma$-measurable function, so the definition is simpler in that case; however, partial functions still come up naturally in the classical theory, so it can be convenient to allow them rather than (as is usually done in a rigorous treatment) systematically replacing them with total functions.
+
+A \textbf{$\mu$-integrable function} is a $\mu$-measurable function $f$ such that the integral $\int_S f \mu$ (as defined below) exists for every measurable set $S$; it is enough to check $S = X$. On a signed measure space, we may equivalently say that it is a $\mu$-measurable function $f$ such that the extended measure $f \mu$ is actually a finite measure. (In any case, we get a finite measure $f \mu$ if $f$ is integrable.)
+
+\hypertarget{integration_10}{}\subsubsection*{{Integration}}\label{integration_10}
+
+In the following, `{}measurable'{} will mean $\mu$-measurable. That is, we assume that $\mu$ is complete and identify $\mu$-equivalent functions. We will also assume that $\mu$ is a positive measure until I make sure of what must be done to generalise.
+
+Given a measure $\mu$, a measurable set $S$, and a measurable function $f$, we will define the integral
+
+\begin{displaymath}
+\int_S f \mu
+\end{displaymath}
+(see above for variations in notation) in stages, from the simplest form of $f$ to the most arbitrary.
+
+Each measurable subset $S \subseteq X$ induces a measurable characteristic function $\chi_S: X \to \mathbb{R}_+$ where $\chi_S(x) = 1$ if $x \in S$, $\chi_S(x) = 0$ if $x \in \neg{S}$. In general, we have
+
+\begin{displaymath}
+\int_S f \mu = \int_X \chi_S f \mu ,
+\end{displaymath}
+so from now on we will assume that we are integrating over all of $X$ (and drop the subscript).
+
+A \textbf{simple function} is a finite $\mathbb{R}_+$-linear combination of measurable characteristic functions; the first form of integral that we define is
+
+\begin{displaymath}
+\int \sum_{1 \leq i \leq n} a_i \chi_{S_i} \mu = \sum_{1 \leq i \leq n} a_i \mu(S_i) .
+\end{displaymath}
+The integral is extended to all measurable functions $f: X \to [0, \infty]$ by the rule
+
+\begin{displaymath}
+\int f \mu = \sup \{\int s \mu \;:\; 0 \leq s \leq f, s simple\}
+\end{displaymath}
+if this supremum converges. Classically, the integral either converges or diverges to infinity, so $\int f \mu$ exists in some sense in any case; the possibilities are more complicated constructively.
+
+For any measurable function $f: X \to [-\infty, \infty]$, define $f_+$ and $f_{-}$ by
+
+\begin{displaymath}
+f_+(x) = \max\{f(x), 0\}, \qquad f_{-}(x) = \max\{-f(x), 0\}
+\end{displaymath}
+so that $f = f_+ - f_{-}$, $|f| = f_+ + f_{-}$. Then the final definition is
+
+\begin{displaymath}
+\int f \mu = \int f_{+} \mu - \int f_{-} \mu
+\end{displaymath}
+if both integrals on the right converge. Classically, the other possibilities are $\infty$, $-\infty$, and $\infty - \infty$; not much can be done with the latter.
+
+A measurable function $f$ is \textbf{integrable} with respect to $\mu$ if this integral converges. It can be proved that all of the definitions above are consistent; that is, if the final definition is applied to a simple function, then it agrees with the original definition.
+
+If $f$ takes values in the $\mathbb{C}$ or in some more general Banach space $V$, then we can still ask whether $|f|$ is integrable. If it is, then we say that $f$ is \textbf{absolutely integrable}. We can then define the integral of $f$; we always have
+
+\begin{displaymath}
+\| \int f \mu \| \leq \int \|f\| \mu .
+\end{displaymath}
+This integral is easy to define if $V$ has a basis; for example, a measurable complex-valued function $f: X \to \mathbb{C}$ is integrable iff both its real and imaginary parts are integrable, and we have
+
+\begin{displaymath}
+\int f \mu = \int \Re{f} \mu + \mathrm{i} \int \Im{f} \mu .
+\end{displaymath}
+I need to check HAF for more details here in the general case. In particular, something can be integrable without being absolutely integrable (although not if it'{}s complex-valued, of course) or indeed even without being valued in a (pseudo)normed space.
+
+The vector space of $V$-valued integrable functions is itself a Banach space, using the norm
+
+\begin{displaymath}
+\|f\|_1 = \int \|f\| \mu .
+\end{displaymath}
+Note that we must use the notion of measurable function as an equivalence class of functions to get a Banach space here; otherwise we have only a pre-Banach space (that is, a complete pseudonormed vector space).
+
+This Banach space is called a \textbf{Lebesgue space} and is denoted $L^1(\mu,V)$, $L^1(X,V)$, or just $L^1$, depending on context. The default value of $V$ is usually either $\mathbb{R}$ or $\mathbb{C}$, depending on the author.
+
+\hypertarget{the_algebra_of_measures_11}{}\subsection*{{The algebra of measures}}\label{the_algebra_of_measures_11}
+
+Note that
+
+\begin{displaymath}
+(f \mu) (S) = \int \chi_S f \mu
+\end{displaymath}
+makes $f \mu$ into a $V$-valued measure whenever $f$ is an integrable $V$-valued function. When $f$ is $[-\infty,\infty]$-valued and $\mu$ is a signed measure, then $f$ is an extended measure which is finite iff $f$ is integrable. We have
+
+\begin{displaymath}
+(f g) \mu = f (g \mu) .
+\end{displaymath}
+Thus integration can be seen as a way of multiplying a function by a measure to get another measure.
+
+The Radon-Nikodym derivative is about reversing this.
+
+Other topics: absolute continuity, etc.
+
+\hypertarget{noncommutative_measure_theory_12}{}\subsection*{{Noncommutative measure theory}}\label{noncommutative_measure_theory_12}
+
+Every commutative von Neumann algebra is isomorphic to the Lebesgue space $L^\infty(X,\mu)$ where $(X,\mu)$ is some measure space. Conversely, if $(X,\mu)$ is a $\sigma$-finite measure space, then $L^\infty(X,\mu)$ is a commutative von Neumann algebra. This is similar to the correspondence between commutative $C^*$-C-star algebra|algebras and locally compact Hausdorff spaces, which is the central approach to noncommutative geometry. It is useful to exploit the intuition that the theory of (noncommutative) von Neumann algebras is a noncommutative analogue of classical measure theory.
+
+\hypertarget{examples_13}{}\subsection*{{Examples}}\label{examples_13}
+
+\begin{itemize}%
+\item Haar measure, Borel measure, Radon measure, spectral measure
+
+\end{itemize}
+\subsection{Differential Forms}
+A differential form is a geometrical object on a manifold that can be integrated. A differential form $\omega$ is a section of the exterior algebra $\Lambda^* T^* X$ of a cotangent bundle, which makes sense in many contexts (e.g. manifolds, algebraic varieties, analytic spaces, \ldots{}).
+
+\hypertarget{abstract_version_3}{}\subsection*{{Abstract version}}\label{abstract_version_3}
+
+Before turning to the usual version in differential geometry, we examine the above requirement through general abstract nonsense.
+
+One way to exhibit this statement nicely is:
+
+A differential $n$-form on $X$ is a smooth $n$-n-functor|functor $P_n(X) \to \mathbf{B}^n \mathbb{R}$ from the path n-groupoid of $X$ to the $n$-fold delooping of the additive Lie group of real numbers.
+The orientation of the diffential form corresponds to the inherent orientation of k-morphisms: as we identify the differential form with a smooth functor on the path n-groupoid, that path n-groupoid necessarily has \emph{oriented} $k$-volumes as its k-morphisms, simply because these $k$-morphisms need to come with information about their (higher categorical) source and target.
+
+To get pseudo-differential forms that may be integrated also over non-oriented and possibly non-orientable manifolds one needs to consider parallel transport functors not with coefficients in just $\mathbf{B}^n \mathbb{R}$ coming from the crossed complex
+
+\begin{displaymath}
+(\mathbb{R} \to {*} \to \cdots \to {*})
+\end{displaymath}
+but the more refined crossed complex
+
+\begin{displaymath}
+(\mathbb{R} \to {*} \to \cdots \to \mathbb{Z}_2)
+\end{displaymath}
+where the $\mathbb{Z}_2$-factor acts by sign reversal on $\mathbb{R}$ (one can also use $U(1)$ instead of $\mathbb{R}$, this way $[P_n(-), \mathbf{B}^n U(1)]$ becomes the Deligne cohomology|Deligne complex and knows not just about differential forms but about $U(1)$ $n-1$-gerbes with connection even).
+
+A little bit of discussion of this unoriented case is currently at orientifold. There for the case $n=2$.
+
+Note that an $n$-morphism in $P_n(X)$ is an oriented $n$-dimensional submanifold of $X$.
+
+Such a functor (as described in more detail at connection on a bundle) assigns a real number to each parametrised $n$-dimensional cube of $X$, that is a subspace by a smooth map $\Sigma : [0,1]^n \to X$. If the differential form that this $n$-functor defines is denoted $\omega \in \Omega^n(X)$, then this real number is denoted by the integration|integral
+
+\begin{displaymath}
+\int_{[0,1]^n} \Sigma^* \omega
+  \,.
+\end{displaymath}
+This integral in turn encodes the $n$-functoriality of the $n$-functor: it effectively says that
+
+\begin{itemize}%
+\item if we decompose the standard $n$-cube $[0,1]^n$ into $N^n$ little subcubes $(C_k)_{k\in \mathbb{N}^n}$ for $N \in \mathbb{N}$
+
+
+\item and apply the $n$-functor to each of these to obtain a result (a real number) to be denoted $\omega(C_k)$;
+
+
+\item then by $n$-functoriality the result of the application of the functor to the full $\Sigma$ is the composition of all the $\omega(C_k)$ in $\mathbb{R}$. i.e. their sum
+
+\begin{displaymath}
+\int_{[0,1]^n} \Sigma^* \omega
+  =
+  \sum_k \omega(C_k)
+  \,.
+\end{displaymath}
+
+
+\end{itemize}
+Since one can let $N$ increase arbitrarily in this prescription --{} $N \to \infty$ --{} it follows that the value of the functor on $\Sigma$ is already determined by all its values on all ``{}infinitesimal $n$-cubes''{} in some sense.
+
+Eric: This is neat and goes toward answering my query about an ``{}arrow theoretic''{} presentation on measure space.
+
+The notion of \textbf{differential form} is the one that makes this precise: a differential form is a rule for assigning to each ``{}infinitesimal $n$-cube''{} a number.
+
+There are in turn different ways to make that last statement precise:
+
+\begin{itemize}%
+\item In differential geometry an ``{}infinitesimal $n$-cube''{} is modeled by an $n$-tuple of tangent bundle|tangent vectors and a differential form is a fiberwise linear map from the $n$-fold exterior power of the tangent bundle to the real numbers, as given below.
+
+
+\item In synthetic differential geometry the statement is in essence the same one, but the difference is that there the notion of ``{}infinitesimal $n$-cube''{} has a concrete meaning on the same footing of other $n$-cubes. If $D^n$ denotes the abstract infinitesimal $n$-cube in this context, then the mapping space $X^{D^n}$ of morphisms from $D^n\to X$ is the $n$-fold tangent bundle of $X$ and a differential form is precisely nothing but a morphism
+
+\begin{displaymath}
+\omega : X^{D^n} \times D^n \to \mathbb{R}
+\end{displaymath}
+(where $\mathbb{R}$ is now the synthetic differential version of the real numbers) subject to three constraints. (These constraints can be seen as the infinitesimal analog of the $n$-functoriality discussed above).
+
+This is described in detail in section 4 of
+
+\begin{itemize}%
+\item Moerdijk-Reyes, Models for Smooth Infinitesimal Analysis
+
+\end{itemize}
+For more on this see differential forms in synthetic differential geometry.
+
+
+
+\end{itemize}
+\hypertarget{examples_4}{}\subsection*{{Examples}}\label{examples_4}
+
+Just to reassure everybody that we'{}re still talking about the same thing:
+
+In local coordinates, a differential form can be expressed in terms of the coordinate variables and their derivatives; a typical $2$-form in coordinates $(x,y,z)$ might be
+
+\begin{displaymath}
+x^2 y\, \mathrm{d}x \wedge \mathrm{d}y + 3 \sin x\, \mathrm{d}x \wedge \mathrm{d}z - (x + 4 y)\, \mathrm{d}x \wedge \mathrm{d}z .
+\end{displaymath}
+In classical differential geometry, expressions like this (but usually written without the ‘$\wedge$’) showed up naturally as integrands; then people began to see them as objects in their own right.
+
+However, differential forms do not need to be expressed in local coordinates; we can say that $\omega$ and $\eta$ are differential forms and get
+
+\begin{displaymath}
+\mathrm{d}\omega \wedge \eta ,
+\end{displaymath}
+for example, as a new differential form.
+
+\hypertarget{definitions_5}{}\subsection*{{Definitions}}\label{definitions_5}
+
+Given a differentiable manifold $X$, or even a generalized smooth space $X$ for which this definition makes sense, a \textbf{differential form} on $X$ is a section of the exterior algebra of the cotangent bundle over $X$; sometimes one refers to an \textbf{exterior differential form} to be more precise. One often requires differential forms to be smooth, or at least continuous, but we will state this explicitly when we want it. A \textbf{differential $p$-form} on $X$ is a section of the $p$th exterior power of the cotangent bundle; the natural number $p \geq 0$ is the \textbf{rank} of the form. A general differential form is a $p$-indexed sequence of differential $p$-forms of which all but finitely many are zero; on a finite-dimensional manifold, this latter condition is automatic.
+
+The \emph{space} $C^\infty\Omega^*(X)$ of \emph{smooth} forms on $X$ may also be defined as the universal differential envelope of the space $C^\infty\Omega^0(X)$ of smooth functions on $X$ (which are the same as the smooth $0$-forms as defined above); more concretely:
+
+It is generated by the smooth functions and three operations:
+
+\begin{itemize}%
+\item an associative binary operation of addition generalising the usual addition of functions,
+\item an associative binary operation $\wedge$ (the \textbf{exterior product} or \textbf{wedge product}) generalising the usual multiplication of functions,
+\item a unary operation $\mathrm{d}$ (the \textbf{exterior derivative}, or \textbf{differential});
+
+\end{itemize}
+subject to these identities:
+
+\begin{itemize}%
+\item addition makes $C^\infty\Omega^*(X)$ into an abelian monoid,
+\item both $\mathrm{d}$ and $\wedge$ distribute over addition,
+\item $\mathrm{d}\mathrm{d}f = 0$,
+\item $\mathrm{d}f \wedge \mathrm{d}f = 0$,
+\item $\mathrm{d}(f \wedge \eta) = \mathrm{d}f \wedge \eta + f \wedge \mathrm{d}\eta$,
+\item $\mathrm{d}(\mathrm{d}f \wedge \eta) + \mathrm{d}f \wedge \mathrm{d}\eta = 0$,
+
+\end{itemize}
+in which $f$ is a smooth function and $\eta$ is an arbitrary smooth form. (Note that one often drops the ‘$\wedge$’ after a $0$-form; thus, $f \eta = f \wedge \eta$. There is hardly any ambiguity if one drops the ‘$\wedge$’ entirely, but it'{}s traditional.)
+
+Although not directly stated, it can be proved that addition makes $C^\infty\Omega^*(X)$ into an abelian group; in fact, 
+it is a module of the commutative ring of smooth functions on $X$. This is further a graded module, graded by the natural numbers, 
+with the elements of grade $p$ being the $p$-forms defined earlier; the space of these is $C^\infty\Omega^p(X)$. If $\omega$ 
+is a $p$-form and $\eta$ is a $q$-form, we have:
+
+\begin{itemize}%
+\item $\mathrm{d}\omega$ is a $(p+1)$-form,
+\item $\omega \wedge \eta$ is a $(p+q)$-form.
+
+\end{itemize}
+The law
+
+\begin{displaymath}
+\mathrm{d}\mathrm{d}\eta = 0
+\end{displaymath}
+holds for any form $\eta$, but the other laws become more complicated; if $\omega$ is a $p$-form and $\eta$ is a $q$-form, then we get
+
+\begin{itemize}%
+\item $\omega \wedge \omega = 0$ if $p$ is odd,
+\item $\omega \wedge \eta = (-1)^{pq}\, \eta \wedge \omega$,
+\item $\mathrm{d}(\omega \wedge \eta) = \mathrm{d}\omega \wedge \eta + (-1)^p\, \omega \wedge \mathrm{d}\eta$.
+
+\end{itemize}
+That is, $C^\infty\Omega^*(X)$ is a skew-commutative algebra over the ring of smooth functions, equipped with a derivation $\mathrm{d}$ of degree $1$. In fact, the description above in terms of generators and relations makes it the free functor|free skew-commutative algebra over that ring equipped with such a derivation. (Or if it doesn'{}t, then it'{}s because I left something out of that description.)
+
+More general forms (in $\Omega^*(X)$) can be recovered as sums of terms, each of which is the wedge product of a function and a smooth form. (This can also be seen as a special case of a vector-valued form as below.) One can still define the exterior derivative of a $C^1$ (once continuously differentiable) form; in general, the differential of a $C^k$ form is a $C^{k-1}$ form. If $X$ is not a smooth manifold but only $C^k$ for some $1 \leq k \lt \infty$, then one has to take more care here, but the definition of the skew-commutative algebra of $C^k$ differential forms can still be made to work.
+
+Given local coordinates $(x^1, \ldots, x^n)$ on a patch $U$ in an $n$-dimensional manifold $X$, any differential form $\eta$ on $U$ can be expressed uniquely as a sum of $2^n$ terms
+
+\begin{displaymath}
+\eta = \sum_I \eta_I \wedge \mathrm{d}x^I ,
+\end{displaymath}
+where $I$ runs over \emph{increasing} lists of indices from $(1,\ldots,n)$, each $\eta_I$ is a function on $U$ (continuous, smooth, etc according as $\eta$ is), and
+
+\begin{displaymath}
+\mathrm{d}x^I = \mathrm{d}x^{I_1} \wedge \cdots \wedge \mathrm{d}x^{I_p}
+\end{displaymath}
+(for $p$ the length of the list $I$) is simply an abbreviation. For a $p$-form, there are $\left(n \atop p\right)$ terms that appear.
+
+\subsection*{{Twisted and vector-valued forms}}\label{twisted_and_vectorvalued_forms_6}
+
+Recall that a differential form on $X$ is a section of the exterior algebra of the cotangent bundle over $X$; call this bundle $\Lambda$. Then given any vector bundle $V$ over $X$, a \textbf{$V$-valued form} on $X$ is a section of the vector bundle $V \otimes \Lambda$. The wedge product of a $V$-valued form and a $V'$-valued form is a $(V \otimes V')$-valued form, but if there is a commonly used multiplication map $V \otimes V' \to W$, then we may think of their wedge product as a $W$-valued form.
+
+Of particular importance are $L$-valued forms when $L$ is a line bundle; these are also called \textbf{$L$-twisted forms}. In local coordinates, a twisted form looks just like an ordinary form, once you choose a nonzero vector in $L$ as a basis. Therefore, they can seem sneaky and confusing sometimes when you realise that they do not behave in the same way!
+
+Let $\Psi$ be the pseudoscalar bundle; that is, a section of $\Psi$ (a pseudoscalar field) is given locally by a simple scalar field (a real-valued function) for each orientation of a local patch, with opposite orientations giving oppositely-signed scalars. A \textbf{pseudoform} is a $\Psi$-twisted form.
+
+On an $n$-dimensional manifold $X$, the space $\Omega^n(X)$ of $n$-forms is itself a line bundle; a $p$-form twisted by this line bundle is a \textbf{densitised form}. Sometimes an $n$-form is itself called a \textbf{density}. Actually, as we will see under integration below, it is really an $n$-\emph{pseudo}form that should be called a density, but that is not the traditional terminology.
+
+Given any real number $w$, there is a line bundle called the line bundle of $w$-weighted representation|weighted scalars; a form twisted by this line bundle is a \textbf{$w$-weighted form}. Note that a $0$-weighted form is just an ordinary form; also, an $n$-pseudoform turns out to be equivalent to a $1$-weighted $0$-form. (And thus a densitised form is equivalent to a $1$-weighted pseudoform.)
+
+\hypertarget{pulling_back_forms_7}{}\subsection*{{Pulling back forms}}\label{pulling_back_forms_7}
+
+Given manifolds $X$ and $Y$ and a map $f: X \to Y$, any differential form $\eta$ on $Y$ defines a \textbf{pullback} form $f^*(\eta)$ on $X$. This is quite straightforward, once one knows how to push forward tangent vectors on $X$ to tangent vectors on $Y$; to apply $f^*(\eta)$ to a list of vectors on $X$, push them forward to $Y$ and apply $\eta$ to them there. If $f$ and $\eta$ are smooth, continuous, etc, then so is $f^*(\eta)$.
+
+Thus, the operation that maps $X$ to $\Omega^*(X)$ extends to a contravariant functor $\Omega^*$. Perhaps confusingly, forms are traditionally known in physics as `{}covariant'{} concepts, because of how the components transform under a change of coordinates. (Ultimately, this confusion goes back to that between active and passive coordinate transformations.)
+
+Note that twisted and (more general) vector-valued forms cannot be pulled back so easily. One needs some extra structure on $f$ to do so; see the discussion of integration of $p$-pseudoforms below for an example.
+
+\hypertarget{integration_of_forms_8}{}\subsection*{{Integration of forms}}\label{integration_of_forms_8}
+
+Let $X$ be an $n$-dimensional manifold, and let $\omega$ be an $n$-pseudoform on $X$. Suppose that $X$ is paracompact space|paracompact and Hausdorff space|Hausdorff, so that we may find a locally finite cover of $X$ with a subordinate smooth partition of unity and a smooth coordinate chart on each patch. Then $\omega$ defines a measure space|measure on $X$ as follows:
+
+\begin{itemize}%
+\item On each coordinate patch $U$, fix the orientation given by the coordinates to turn $\omega$ into an untwisted $n$-form $\hat{\omega}$; then write $\hat{\omega}$ in coordinates as
+
+\begin{displaymath}
+\hat{\omega} = \omega_U \wedge \mathrm{d}x^1 \wedge \cdots \wedge \mathrm{d}x^n .
+\end{displaymath}
+In this situation, it is convenient also to write
+
+\begin{displaymath}
+\omega = \omega_U \mathrm{d}x^1 \cdots \mathrm{d}x^n ,
+\end{displaymath}
+although this really does nothing but define the symbol ‘$\mathrm{d}x^1 \cdots \mathrm{d}x^n$’ (without the wedges).
+
+
+\item The coordinates on $U$ define a diffeomorphism between $U$ and an open subset of $\mathbf{R}^n$ that we'{}ll also call $U$; so use the latter formula to interpret
+
+\begin{equation}
+\int_U \omega = \int_U \omega_U(x^1,\ldots,x^n)\, \mathrm{d}x^1 \cdots \mathrm{d}x^n ,
+\label{absvalposs}\end{equation}
+where the right-hand side is now interpreted in the usual way as as integral with respect to Lebesgue measure.
+
+
+\item Using the partition of unity, write
+
+\begin{displaymath}
+\omega = \sum_U w_U \omega_U ,
+\end{displaymath}
+where $w_U$ is a weight function defined on $U$ and $\omega_U$ is the restriction of $\omega$ to $U$. Then we have
+
+\begin{displaymath}
+\int_X \omega = \sum_U \int_U w_U(x^1,\ldots,x^n) \omega_U(x^1,\ldots,x^n)\, \mathrm{d}x^1 \cdots \mathrm{d}x^n ,
+\end{displaymath}
+or more generally,
+
+\begin{displaymath}
+\int_E \omega = \sum_U \int_U \chi_E(x^1,\ldots,x^n) w_U(x^1,\ldots,x^n) \omega_U(x^1,\ldots,x^n)\, \mathrm{d}x^1 \cdots \mathrm{d}x^n
+\end{displaymath}
+for $E$ a measurable subset of $X$ and $\chi_E$ the characteristic function of $E$.
+
+
+
+\end{itemize}
+\emph{A priori}, this definition depends not only on the particular coordinate patches chosen but also on the partition of unity chosen to go with them. Furthermore, the defintion could be done just as easily (perhaps even more easily) for something other than an $n$-pseudoform. But the (perhaps surprising) fact that justifies it all is this:
+
+When $\omega$ is an $n$-pseudoform, the definition of $\int_E \omega$ is independent of the coordinates and partition chosen. Furthermore, the map from $n$-pseudoforms to measures is linear.
+
+Note that, if $\omega$ were an $n$-form instead of a pseudoform, then the definition would depend on the orientation of the coordinates chosen. We could fix that by using the absolute value $|\omega_U|$ in place of $\omega_U$ in \eqref{absvalposs} and in the following equations, but then the map from forms to measures would not be linear.
+
+It may also be enlightening to consider how to go back from a measure to an $n$-pseudoform. If $\omega$ is an absolutely continuous measure|absolutely continuous] (see \href{http://en.wikipedia.org/wiki/absolute_continuity}{Wikipedia} \href{http://en.wikipedia.org/wiki/Radon_measure}{articles} until we get our own) on $X$, then it defines an $n$-pseudoform (which we may also call $\omega$) as follows:
+
+\begin{itemize}%
+\item Given a point $a$, choose one of the two local orientations at $a$.
+\item Given $n$ linearly independent vectors $(v_1,\ldots,v_n)$ at $a$, develop them into a coordinate system on a neighbourhood $U$ of $a$.
+\item For sufficiently large natural number $k$, the coordinate cube $C_k$ of points with coordinates in $[0,1/k]^n$ exists (lies within $U$).
+\item Let $L$ be $\lim_{k \to \infty} k^n \omega(C_k)$.
+\item If the coordinate system on $U$ is positively oriented at $a$, then let $\omega(v_1,\ldots,v_n)$ be $L$; if the coordinate system on $U$ is negatively oriented at $a$, then let $\omega(v_1,\ldots,v_n)$ be $-L$.
+\item Extend the definition to $n$ arbitrary vectors by continuity (which necessarily maps a linearly dependent list of vectors to zero).
+
+\end{itemize}
+Again, this definition is independent of the coordinate system chosen (as long as it extends the given vectors); or if that'{}s not true, then we need to add further restrictions to the absolutely continuous Radon measure $\omega$. The definition is \emph{not} independent of the orientation chosen, of course; thus we get a pseudoform rather than an untwisted form. You might try to ignore the orientation and take $\omega(v_1,\ldots,v_n)$ to be $L$ always, but that does not define an exterior form, as is most easily seen if two vectors are switched (which does not change $L$).
+
+One can integrate forms other than $n$-pseudoforms, of course, but only over certain structures within the manifold $X$. Specifically, if $R$ is a $p$-dimensional submanifold of $X$ (that is a $p$-dimensional manifold $U$ equipped with a map $R: U \to X$), then we would like to integrate $p$-forms or $p$-pseudoforms (defined on $X$) over $R$. Here is how we do this:
+
+\begin{itemize}%
+\item We may integrate a $p$-form $\eta$ over $R$ if $R$ is \emph{oriented}, that is if $U$ is oriented. We pull back $\eta$ from $X$ to $U$, then use the orientation on $U$ to turn $\eta$ into a $p$-pseudoform, which we can then integrate on the $p$-dimensional manifold $U$.
+
+
+\item We may integrate a $p$-pseudoform $\eta$ over $R$ if $R$ is \emph{pseudooriented}, that is if it is equipped with a map that, for each point $a$ on $U$, takes a local orientation of $X$ at $R(a)$ to a local orientation of $U$ at $a$, continuously in $a$ and taking opposite orientations to opposite orientations. Then locally, we turn $\eta$ into a $p$-form on $X$ using a local orientation on $X$, pull that back to $U$, and use the corresponding local orientation on $U$ to turn that back into a $p$-pseudoform, which we can then integrate on $U$.
+
+
+
+\end{itemize}
+Thus, while integration of $n$-pseudoforms is the most basic, integration of general $p$-forms is actually a bit simpler than integration of general $p$-pseudoforms. Integration of other twisted or vector-valued forms can also be done, again given appropriate structure on $R$. Note that, if $X$ is thought of a submanifold of itself, then it has a natural pseudoorientation that takes each local orientation to itself, and so we recover the original definition of integration of $n$-pseudoforms on $X$.
+
+One often sees the definition of integration given for \emph{parametrised} submanifolds, that is submanifolds where $U$ is an open subset of $\mathbf{R}^p$. This amounts to a combination of the concepts above, with the two uses of $U$ (as a coordinate patch in $X$ or as the source of a submanifold of $X$) identified. The theorem that the integral of an $n$-pseudoform on $X$ is independent of the coordinates chosen now becomes a theorem that the integral of a parametrised submanifold is independent of the parametrisation (up to some details about orientation), which in the end returns the result that one can integrate forms over arbitrary submanifolds (given an orientation or pseudoorientation as above).
+
+Zoran Škoda: Should maybe this entry have a discussion on heuristics behind the usual trick in supersymmetry which asserts that the inner hom for supermanifolds, gives the statement that the algebra of smooth differential forms on $M$ is the space of functions on the odd tangent bundle $\Pi T M$? I am not the most competent to do this succinctly enough\ldots{}
+
+\emph{Toby}: Possibly that should go at differential forms on supermanifolds?
+
+Zoran Škoda: By no means. Ordinary differential forms on ORDINARY manifolds are the same as functions on odd tangent bundle. I did not want to say anything about the generalization of differential forms on supermanifolds. So it is NOT a different notion, but a different way to define it. If going to toposes hence synthetic framework is not separated why would be separated the equality which involves a parity trick\ldots{}
+
+\emph{Toby}: Ah, I see; your $M$ above need not be super, and it still works. Then yes, that should be mentioned here too.
+
+\hypertarget{cohomology_of_forms_9}{}\subsection*{{Cohomology of forms}}\label{cohomology_of_forms_9}
+
+There is a cohomology theory of smooth differential forms; we have a chain complex
+
+\begin{displaymath}
+\cdots \stackrel{\mathrm{d}}\to C^\infty\Omega^2(X) \stackrel{\mathrm{d}}\to C^\infty\Omega^1(X) \stackrel{\mathrm{d}}\to C^\infty\Omega^0(X) \stackrel{\mathrm{d}}\to 0 ;
+\end{displaymath}
+the chain cohomology of this complex is the \textbf{de Rham cohomology} of $X$.
+
+As smooth differential forms are the cochains in de Rham cohomolgy, the theory of integration of forms allows us to interpret relatively compact subspace|relatively compact oriented submanifolds as chains on $X$, giving us a homology theory. Combining these, we have \textbf{Stokes'{}s theorem}
+
+\begin{displaymath}
+\int_{\partial{R}} \omega = \int_R \mathrm{d}\omega ,
+\end{displaymath}
+where $\partial{R}$, which may be interpreted as the \textbf{boundary} of $R$, is also called the \textbf{codifferential} as it is dual to $\mathrm{d}$.
+
+\hypertarget{references_10}{}\subsection*{{References}}\label{references_10}
+
+\begin{itemize}%
+\item Schreiber \& Waldorf, \emph{Smooth Functors vs. Differential Forms} (\href{http://arxiv.org/abs/0802.0663}{arXiv})
+
+\end{itemize}
+Much fun discussion between Eric Forgy, Toby Bartels, and John Baez, about whether integration of forms or pseudoforms is most fundamental (and about whether twisted forms in general are useful and interesting geometric objects or the bastard spawn of hell) may be found in \href{http://groups.google.com/group/sci.physics.research/browse_thread/thread/6a231426b3a313c0/2888a120a9b1f5ad}{this giant Usenet thread}. More specifically:
+
+\begin{itemize}%
+\item \href{http://groups.google.com/group/sci.physics.research/msg/3c6a1a7237b66c8c?dmode=source}{John'{}s alter ego the Wizard} explains why $n$-pseudoforms are the most natural things to integrate on an $n$-dimensional manifold;
+\item \href{http://groups.google.com/group/sci.physics.research/msg/2774cbbc982e200e?dmode=source}{applications of pseudoforms} to classical contexts where absolute values appear;
+\item \href{http://groups.google.com/group/sci.physics.research/msg/47bbd29289f208f8?dmode=source}{the general notion of form} corresponding to an arbitrary representation of the general linear grouphe end of the post);
+\item \href{http://groups.google.com/group/sci.physics.research/msg/424da828e75b6b90?dmode=source}{absolute values of forms} and how to integrate them even when they don'{}t exist (near the end of the post).
+
+\end{itemize}
+\section{Mathematical Ideas and Notions of Quantum Field Theory}
+The following remarks are from an undergraduate course taught at MIT. Courtesy of MIT OCW.
+One of the main differences between classical and quantum mechanics is, roughly speaking, that quantum particles do not obey the classical
+equations of motion, but can random deviate from their classical trajectories. Therefore, given the position and velocity of the particle
+at a given time, we cannot determine its position at a later time, but can only determine the density of probability that at this later time 
+the particle will be found at a given point. In this sense quantum particles are similar to Brownian particles. So effectively some of 
+the techniques used in stochastic calculus are useful in QFT.
+   \paragraph{} The motion of a Brownian particle in $\mathcal{R}^{d}$ in a potential field U: $\mathcal{R}^{d} \rightarrow \mathbb{R}$
+is described by a stochastic process q = q(t), $q = (q_1,q_2,...,q_t) \in \mathcal{R}^{d}.$
+That is, for each real t we have a random variable q(t) (position of the particle at a time time t), such that the dependence of t is regular
+in some sense. The random dynamics of the particle is 'defined' as follows if y: $[a,b] \rightarrow \mathcal{R}^{d}$ is a continuously differentiable
+function, then the density of probability that q(t) = y(t) for t $t \in [a,b]$ is proportional to $\exp{-S(y)/\kappa}$, where S(y):=
+$\int_{a}^{b}(\frac{1}{2}y'^{2}-U(y))dt$ is the action of the corresponding classical mechanical system, and $\kappa$ is the diffusion coefficient. 
+Thus, for given q(a) and q(b), the likeliest q(t) is the one that minimizes S (in particular, solves the classical equations of motion $\hat{\hat{q}} = - U'(q))$
+while the likelihood of the other paths decays exponentially with the deviation of the action of these paths from the minimal possible. 
+\begin{remark}
+ This discussion assumes that the extremum of S at q is actually a minimum which we know is not always the case. 
+\end{remark}
+All the information we can hope to get from such a process is contained in the correlation functions $< {q_i}_1(t_{1}),..,{q_i}_{n}(t_{n})>$ which by definition 
+are the expectation values of the products of random variables ${q_i}_{1} (t_{1}),..,{q_i}_{n}(t_{n})$
+(more specifically, by Kolmogorov's theorem the stochastic process q(t) is completely determined by these functions).
+So such functions should be regarded as the output, or answer, of the theory of the Brownian particle. 
+\paragraph{}
+ So the main question is how to compute the correlation functions. The definition above obviously gives the following answer: given $t_{1},...,t_{n} \in (a,b]$
+we have 
+ \begin{equation*}
+  <{q_j}_1(t_{1}),..,{q_j}_{n}(t_{n}> = \int {q_j}_1(t_{1}),..,{q_j}_{n}(t_{n}\exp{-S(q)/\kappa}Dq,
+ \end{equation*}
+where integration is carfried out over the space of paths $[a,b] \rightarrow \mathcal{R}^{d}$ and Dq is a Lebesque measure on the space
+of paths such that $\int \exp{-S(q)/\kappa}Dq=1$. Such an integral is called a \textit{path integral}, since it is an integral over the space of paths.
+   \paragraph{} We need to justify the infinite dimensional integrals. In this case we need the theory of Wiener integrals and Lebeque measure theory. 
+\subsection{Quantum Mechainics}
+Now let usx turn to a quantum particle. Quantum mechanics is notoriously difficult to visualize, and the randomness of the behaviour of a quantum
+particle is less intuitive and more subtle than the behaviour of a Brownian particle; nevertheless as was pointed out by Feynman - the behaviour
+of a quantum particle in a potential field U(q) is correctly described by the same model. 
+\section{Category and Sheaf Theory}
+\subsection{Constructible Functions}
+Robert Ghrist has an excellent and thorough introduction to the Euler Calculus, on his web page. I was at the time of writing unable 
+to find a reference for this. However Pierre Schapira provided an introduction in a paper \cite{Schapira199183}. Basically, one can create 
+a calculus around the Euler characteristic. In conjunction with integral transform methods, these are very useful in a range of applied problems
+such as signal processing, the understanding of sensor data and MRI machines. 
+\subsection{coproduct}
+
+\hypertarget{context_1}{}\subsubsection*{{Context}}\label{context_1}
+
+\hypertarget{category_theory_2}{}\paragraph*{{Category theory}}\label{category_theory_2}
+
+!include category theory - contents
+
+\hypertarget{limits_and_colimits_3}{}\paragraph*{{Limits and colimits}}\label{limits_and_colimits_3}
+
+!include infinity-limits - contents
+
+\hypertarget{coproducts_4}{}\section*{{Coproducts}}\label{coproducts_4}
+
+\noindent\hyperlink{idea_5}{Idea}\dotfill \pageref*{idea_5} \linebreak
+\noindent\hyperlink{definition_6}{Definition}\dotfill \pageref*{definition_6} \linebreak
+\noindent\hyperlink{examples_7}{Examples}\dotfill \pageref*{examples_7} \linebreak
+\noindent\hyperlink{properties_8}{Properties}\dotfill \pageref*{properties_8} \linebreak
+
+
+\hypertarget{idea_5}{}\subsection*{{Idea}}\label{idea_5}
+
+The notion of \emph{coproduct} is a generalization to arbitrary categories of the notion of disjoint union in the category Set.
+
+\hypertarget{definition_6}{}\subsection*{{Definition}}\label{definition_6}
+
+For $C$ a category and $x, y \in Obj(C)$ two objects, their \textbf{coproduct} is an object $x \coprod y$ in $C$ equipped with
+ two morphisms
+
+\begin{displaymath}
+\itexarray{
+    x &&&& y
+    \\
+    & {}_{\mathllap{i_x}}\searrow && \swarrow_{\mathrlap{i_y}}
+    \\
+    && x \coprod y
+  }
+\end{displaymath}
+such that this is universal property|universal with this property, meaning such that for any other object with maps like this
+
+\begin{displaymath}
+\itexarray{
+    x &&&& y
+    \\
+    & {}_{\mathllap{f}}\searrow && \swarrow_{\mathrlap{g}}
+    \\
+    && Q
+  }
+\end{displaymath}
+there exists a \emph{unique} morphism $(f,g) :  x \coprod y \to Q$ such that we have a commuting diagram
+
+\begin{displaymath}
+\itexarray{
+    x &\stackrel{i_x}{\to}& x \coprod y &\stackrel{i_y}{\leftarrow}&
+    y
+    \\
+    & {}_{\mathrlap{f}}\searrow & \downarrow^{\mathrlap{(f,g)}} & \swarrow_{\mathrlap{g}}
+    \\
+    && Q
+  }
+  \,.
+\end{displaymath}
+This morphism $(f,g)$ is called the \textbf{copairing} of $f$ and $g$.
+
+
+
+A coproduct is thus the colimit over the diagram that constists of just two objects.
+
+More generally, for $S$ any set and $F : S \to C$ a collection of objects in $C$ indexed by $S$, their \textbf{coproduct} is an object
+
+\begin{displaymath}
+\coprod_{s \in S} F(s)
+\end{displaymath}
+equipped with maps
+
+\begin{displaymath}
+F(s)  \to \coprod_{s \in S} F(s)
+\end{displaymath}
+such that this is universal property|universal among all objects with maps from the $F(s)$.
+
+\hypertarget{examples_7}{}\subsection*{{Examples}}\label{examples_7}
+
+\begin{itemize}%
+\item In Set, the coproduct of a family of sets $(C_i)_{i\in I}$ is the disjoint union $\coprod_{i\in I} C_i$ of sets.
+
+This makes the coproduct a categorification of the operation of addition of natural numbers and more generally of cardinal numbers: for $S,T \in FinSet$ two finite sets and $|-| : FinSet \to \mathbb{N}$ the cardinality operation, we have
+
+\begin{displaymath}
+|S \coprod T| = |S| + |T|
+  \,.
+\end{displaymath}
+
+\item In Top, the coproduct of a family of spaces $(C_i)_{i\in I}$ is the space whose set of points is $\coprod_{i\in I} C_i$ and whose open subspaces are of the form $\coprod_{i\in I} U_i$ (the internal disjoint union) where each $U_i$ is an open subspace of $C_i$. This is typical of topological concrete categories.
+
+
+\item In Grp, the coproduct is the free product, whose underlying set is \emph{not} a disjoint union. This is typical of algebraic category|algebraic categories.
+
+
+\item In Ab, in Vect, the coproduct is the subobject of the product consisting of those tuples of elements for which only finitely many are not 0.
+
+
+\item In Cat, the coproduct of a family of categories $(C_i)_{i\in I}$ is the category with
+
+\begin{displaymath}
+Obj(\coprod_{i\in I} C_i) = \coprod_{i\in I} Obj(C_i)
+\end{displaymath}
+and
+
+\begin{displaymath}
+Hom_{\coprod_{i\in I} C_i}(x,y) = 
+  \left\{
+    \begin{aligned}
+      Hom_{C_i}(x,y) & if x,y \in C_i
+      \\
+      \emptyset & otherwise
+    \end{aligned}
+  \right.
+\end{displaymath}
+
+\item In Grpd, the coproduct follows Cat rather than Grp. This is typical of oidifications: the coproduct becomes a disjoint union again.
+
+
+
+\end{itemize}
+\hypertarget{properties_8}{}\subsection*{{Properties}}\label{properties_8}
+
+\begin{itemize}%
+\item A coproduct in $C$ is the same as a product in the opposite category $C^{op}$.
+
+
+\item When they exist, coproducts are unique up to unique canonical isomorphism, so we often say ''{}generalized the|the coproduct.''{}
+
+
+\item A coproduct indexed by the empty set is an initial object in $C$.
+
+
+
+\end{itemize}
+!redirects coproducts
+
+
+\subsection{Sheaf Theory}
+A SHEAF is a presheaf $\mathcal{F}$ that respects \textit{gluings} as well as restrictions. 
+Consider two open subsets $U,V \subset X$. A presheaf is a sheaf iff for all U and V open in X,and sections $\gamma_{U}$ , $\gamma_{V}$ of
+U and V which agree on the overlap $U \cap V$, there exists a unique section of $U \cup V$ which agrees with $\gamma_{U}$ and $\gamma_{V}$
+on the components. More generally, we require that this property hold for a familyof open set ${U_{i}}$ for i in some potentially large indexing set.
+   \paragraph{} The canonical example of a non-sheaf presheaf is the presheaf that assigns to an open set U the group of constant functions 
+$f: U \rightarrow \mathbb{Z}.$ With restriction maps defined to be the identity. To see this is not a sheaf, consider two disjoint open sets U
+and V an the functions $f_{U}(x) = 5$ for $x\;\in\;U$ and $f_{V}(x)=7$ for $x\;\in\;V$. Since the sets have empty intersection they vacuously
+agree there, despite the absence of a constant function $f: U \cup V$ $\rightarrow$ $\mathbb{Z}$ such that $f|_{V}$ = $f_{V}$
+
+and $f|_{U}$ = $f_{U}$
+One can mitigate the problem by instead assigning to  any open set U the group of locally constant function: this defines a sheaf,sometimes 
+called $\mathbb{\tilde{Z}}$.
+To an open subset it assigns continuous functions $f:U$ $\rightarrow\;\mathbb{Z},$
+which by the discrete topology on $ \mathbb{Z}$,are constant on connnected components. Consequently the group of everywhere defined sections
+ $\mathbb{\tilde{Z}}(X)$ are exactly functions that are constant on connected components of X. The rank of this free abelian group calculates the
+number of connected componentsand is the most basic topological invariant of a space. This sheaf has even more info about X and has cohomological
+data exactly equal to the familiar cohomology of X with $\mathbb{Z}$ coefficients. This indicates another interpretation of sheaves - a sheaf is
+a generalized coefficient system for computing cohomology. 
+   We can go on to define an Etale space and a 'sheaf of sections'. 
+\subsection{Sheaf operations}
+\section{Morse Theory}
+One could easily write a book on Morse Theory [Milnor reference should go here] so lets include here a brief summary, and more details can 
+be added in the future. Morse theory is a means of relating the global featuresof (in the classical setting) a Riemannian manifold 
+$\mathcal{M}$ with the local features of critical points of smooth $\mathbb{R}$-valued functions on $\mathcal{M}$. 
+Recall that $h:\mathcal{M}\;\rightarrow\;
+\mathbb{R}$ is MORSE if all critical points of h are nondegenerate, the the sense of having a nondegenerate Hessian matrix of second partial
+deriatives. Denote by $Cr(h)$ the set of critical points of h. For each $p\;\in\;Cr(h)$, the MORSE INDEX of p, $\mu(p)$,is defined as the number
+of negative eigenvalues of the Hessian at $p$, or, equivalently, the dimension of the unstable manifold $W^{\mu}(p)$ of th gradient vector field
+$-\nabla h$ at p. Morse theory can obviously be extended [include references] to the Euler Calculus used in Sensing [Ghrist et al]
+\section{Topological Phases of Matter}
+Topological phases, the states of matter which support anyons, occur in many-particle physical systems.
+ Therefore it is reasonable to use field
+theory techniques to study these states. A canonical, but by no means unique, example of a field theory for a 
+topological phase is Chern-Simons
+theory
+  \begin{definition}
+   A precise definition of a TOPOLOGICAL PHASE is the following. A system is in a topological phase if, at low temperatures and energies,
+and long wavelengths, all observable properties (e.g. correlation functions) are invariant under smooth deformations (diffeomorphisms) of the spacetime
+manifold in which the system lives. Equivalently all observable properties are independent of the choice of spacetime co-ordinates, which need not
+be inertial or rectilinear. 
+The preceding definition of a topological phase may be stated more compactly by simply saying that a system is in a topological phase if its
+low-energy effective field theory is a TQFT, i.e. a field theory whose correlation functions are invariant under diffeomorphisms.
+  \end{definition}
+\subsection{Chern-Simons Theory}
+The simplest example of a TQFT, is an Abelian Chern Simons theory.
+Historically the first ever TQFT paper is \cite{TQFTJones_1989}. %TK not necessarily true, needs rewritten
+\section{Functional Analysis}
+\subsection{Bases in Functional Analysis}
+basis|Bases in linear algebra are extremely useful tools for analysing problems. Using a basis, one can often rephrase a complicated abstract problem in concrete terms, perhaps even suitable for a computer to work with. A basis provides a way of describing a vector space in a way that:
+
+\begin{enumerate}%
+\item Is complete: every point in the space can be described in this fashion.
+\item Has no redundancies: the description of a point is unique.
+
+\end{enumerate}
+When translated into the language of linear algebra, we recover the key properties of a basis: that it be a spanning set and linearly independent.
+
+In infinite dimensions, having a basis becomes more valuable as the spaces get more complicated. However, the notion of a basis also becomes complex because the question of what makes a description admits different answers depending on whether we want only finite sums, we allow sequences, or we want infinite sums.
+
+\subsubsection{{Definitions}}\label{definitions_3}
+
+\begin{defn}
+\label{basis}\hypertarget{basis}{}
+\begin{enumerate}%
+\item We say that $B$ is a \textbf{Hamel basis} if:
+
+\begin{enumerate}%
+\item Every element of $v$ is a finite linear combination of elements of $B$,
+\item If $v = \sum_{b \in B} \alpha_b b$ then the $\alpha_b$ are unique.
+
+\end{enumerate}
+Alternatively, $B$ is linearly independent subset and $Span(B) = V$; in other words, the span of $B$ is $V$ but no proper subset of $B$ has this property.
+
+
+\item We say that $B$ is a \textbf{topological basis} if:
+
+\begin{enumerate}%
+\item Every element of $v$ is a limit of a sequence of finite linear combinations of elements of $B$,
+\item No element of $B$ is a limit of a sequence of finite linear combinations of the \emph{other} elements of $B$,
+
+\end{enumerate}
+Alternatively, $B$ is total subset|totalhat its span is dense subspace|dense) but no proper subset of $B$ is total.
+
+
+\item We say that $B$ is a \textbf{Schauder basis} if:
+
+\begin{enumerate}%
+\item Every element of $v$ is a (possibly infinite) sum of scales of elements of $B$,
+\item If $v = \sum_{b \in B} \alpha_b b$ then the $\alpha_b$ are unique.
+
+\end{enumerate}
+
+
+\end{enumerate}
+\end{defn}
+\subsection*{{Properties}}\label{properties_4}
+
+\begin{enumerate}%
+\item In the presence of the axiom of choice, Hamel bases always exist.
+
+
+\item If $B$ is a topological basis, then $B$ has a dual basis. Since $B \setminus \{b\}$ is not total but $B$ is total, the closure of the span of $B \setminus \{b\}$ must be a codimension $1$ subspace, whence the kernel of a non-trivial continuous linear functional on $V$, say $f_b$. By scaling, this functional can be assumed to satisfy $f_b(b) = 1$. Since $B \setminus \{b\} \subseteq \ker f$, $f(b') = 0$ for all $b' \in B$, $b' \ne b$.
+
+
+\item If $B$ is a Schauder basis then it is a topological basis and so, as mentioned, has a dual basis. Then the coefficients in the sum $v = \sum \alpha_b b$ must be given by evaluating the dual basis on $v$: $v = \sum f_b(v) b$.
+
+
+
+\end{enumerate}
+\subsection*{{Examples}}\label{examples_5}
+
+\begin{enumerate}%
+\item In $C([0,1],\mathbb{C})$ with the norm ${\|f\|} = \max\{{|f(t)|}\}$:
+
+\begin{enumerate}%
+\item The monomials are linearly independent and have dense span, but do not form a topological basis as there is a sequence of polynomials with no linear term converging to $t$.
+
+
+\item The trigonometric polynomials do form a topological basis. The dual basis is given by taking the Fourier coefficients of a function. However, it is not a Schauder basis as there are continuous functions which are not the uniform limit of their Fourier series.
+
+
+\item The following is a Schauder basis. Let $(d_n)$ be the sequence $\{0, 1, \frac{1}{2}, \frac{1}{4}, \frac{3}{4}, \dots\}$. 
+Define $f_n$ to be the piecewise-linear function with the property that: $f_n(d_n) = 1$ and $f_n(d_k) = 0$ for $k \lt n$, and $f_n$
+ has the least ``breaks''. Then $f_n$ forms a Schauder basis for $C([0,1],\mathbb{C})$. This is the classical \emph{Faber-Schader} basis.
+
+
+
+\end{enumerate}
+
+
+\end{enumerate}
+\hypertarget{references_6}{}\subsection*{{References}}\label{references_6}
+
+\begin{itemize}%
+\item Enflo, P. (1973). A counterexample to the approximation problem in \{B\}anach spaces. \emph{Acta Math.}, \emph{130}, 309--{}317.
+
+
+\item Semadeni, Z. (1982). \emph{Schauder bases in \{B\}anach spaces of continuous functions} (Vol. 918). Lecture Notes in Mathematics. Berlin: Springer-Verlag.
+
+
+
+\end{itemize}
+\subsection{Spectral Methods for PDE}
+The following paragraph is meant as an introduction to the method for pure mathematicians with a background in functional analysis.
+
+For illustrative purposes we will make some simplifying assumptions. Let'{}s assume that we have an infinite topological vector space T, its topological dual $T^*$ and a (closable densely defined differential) operator
+
+\begin{displaymath}
+A: D \subset T \to T
+\end{displaymath}
+with a unique solution of the equation
+
+\begin{displaymath}
+A(f) = 0
+\end{displaymath}
+We omit initial and boundary conditions for the moment. In order to calculate an approximation to the exact solution $f$, we need to turn the infinite dimensional problem to a finite dimensional one.
+
+The basic idea of spectral methods is to choose a finite dimensional subspace $T_g$ of T spanned by a given set of functions $\{g_1, ..., g_n \}$, which are called in this context \textbf{trial, expansion or approximation functions}. We are looking for the projection of the exact solution $f$ to the subspace $T_g$, but since we don'{}t know $f$, we cannot calculate the exact expansion
+
+\begin{displaymath}
+f = \sum_{k = 1}^n \alpha_k g_k
+\end{displaymath}
+But we can test the goodness of a given approximation $f_{\alpha} := \sum_{k = 1}^n \alpha_k g_k$ by testing $M(f_{\alpha})$ for ``{}smallness''{}. This function is sometimes called the \textbf{residual function}.
+
+Different spectral methods differ mainly in their interpretation of ``{}smallness''{} and their strategy to determine the best approximation.
+
+One particular ``{}smallness''{} test in spectral methods is done via a choice of a finite dimensional subspace $T^*_h$ of the dual space $T^*$ spanned by the elements $\{h_1, ..., h_n \}$, we then demand that
+
+\begin{displaymath}
+\langle \; M(f_{\alpha}), \; h_i \; \rangle = 0
+\end{displaymath}
+should hold for all $h_i \in T^*_h$. The ``{}functions''{} $h_i$ are called \textbf{test or weight functions}. 
+Due to the choice of finite dimensional subspaces the problem is reduced to a finite set of (linear) algebraic equations.
+
+\subsubsection*{{Approximation with Orthonormal Functions in Hilbert Space}}
+
+Often the function space is a \url{http://en.wikipedia.org/wiki/Hilbert_space}{Hilbert space} and the approximation functions elements of an orthonormal base. 
+This is the case for example if one uses Fourier series. In some cases it is possible to show that the expansion coefficients of, 
+for example, a smooth function in an orthonormal basis decay exponentially fast. This is sometimes called 
+\textbf{exponential} or \textbf{spectral accuracy} in the literature.
+
+\subsubsection*{{Difference of Spectral and Finite Element Methods}}
+
+The only difference of spectral and finite element methods is that spectral methods use approximation functions that are not local, while finite elements uses approximation functions with support restricted to certain simple subsets of the domain of the equation one would like to solve.
+
+As a consequence, finite elements can only handle bounded domains. It is possible to combine both approaches and get, for example, the \href{http://en.wikipedia.org/wiki/Hp-FEM}{hp-FEM}.
+
+\subsubsection*{Choice of Basis Functions}
+
+Basis functions should be easy to evaluate, both numerically or with pen-and-paper if a step of the overall calculation can and should be performed by hand.
+
+Basis functions should be complete in the sense that the approximation gets ``{}arbitrarily good''{} with increasing number of approximation functions.
+
+To make the latter precise, one needs a measure of closeness which will usually be a norm of a Banach space of functions $\| \cdot \|$. Then we would like to have a relation like
+
+\begin{displaymath}
+\lim_{n \to \infty} \| u - u_n \| = 0
+\end{displaymath}
+where $n$ is the number of approximation functions (or, to be more precise, the dimension of the subspace of the topological vector space spanned by the approximation functions).
+
+For practical problems, it would be nice to know that the approximation converges with a certain rate, that it is exponential, for example:
+
+\begin{displaymath}
+\| u - u_n \|  = O(\exp(-n))
+\end{displaymath}
+With regard to boundary conditions, there are two possibilites:
+
+\begin{itemize}%
+\item One can choose approximation functions that fulfill the boundary conditions element-wise,
+
+
+\item one imposes additional constraints on the approximation such that the approximation will fulfill the boundary conditions, even though the approximation functions do not.
+
+
+
+\end{itemize}
+The most commonly used approximation functions are
+
+\begin{itemize}%
+\item trigonometric functions (i.e. Fourier series),
+
+
+\item Chebyshev polynomials
+
+
+
+\end{itemize}
+\subsection*{Examples}
+
+\subsubsection{One Dimensional Boundary Problem}
+
+We will have a look at an ordinary differential equation on the interval $[-1, 1]$ with boundary conditions:
+
+\begin{displaymath}
+u_{xx} - (x^6 + 3 x^2) u = 0
+\end{displaymath}
+where we have written $u_{xx}$ for $\frac{d^2 u}{d x^2}$.
+
+The boundary conditions are:
+
+\begin{displaymath}
+u(-1) = u(1) = 0
+\end{displaymath}
+This problem has an exact solution which is:
+
+\begin{displaymath}
+u(x) = \exp{(\frac{1}{4} (x^4 - 1))}
+\end{displaymath}
+The first step to calculate an approximate solution using the spectral method is to choose the approximation functions, in this example we choose the polynomials $1, x, x^2$. With this choice, the approximation functions themselves don'{}t satisfy the boundary conditions, therefore we make another choice and choose as approximation
+
+\begin{displaymath}
+u_a := 1 + (1 - x^2) (a_0 + a_1 x + a_2 x^2)
+\end{displaymath}
+This way, the boundary conditions are satisfied independently of the approximation coefficients $a_0, a_1, a_2$.
+
+The residual function is of course
+
+\begin{displaymath}
+R(a_0, a_1, a_3; x) = \frac{d^2 u_a}{d x^2} - (x^6 + 3 x^2) u_a
+\end{displaymath}
+We choose as test functions three Dirac delta functions, which is equivalent to choosing three points $(x_0, x_1, x_2)$ such that the residual function vanishes at these points. This choice has its own name, it is called the \textbf{collocation} or \textbf{pseudospectral method}.
+
+Choosing as collocation points the tuple $(- \frac{1}{2}, 0, \frac{1}{2})$ leads to a system of three linear equations for the approximation coefficients, with the solution:
+
+\begin{displaymath}
+a_0 = a_2 = - \frac{784}{3807} \; \text{and} \; a_1 = 0
+\end{displaymath}
+
+
+
+The choice of the approximation functions and of the test functions are completely arbitrary, so the follow-up question to this example is if there is any way to determine what a good choice would be.
+
+We could have known that $a_2$ would turn out to be zero, for example, because the problem is symmetric with respect to reflection along the y-axis. Without using this knowledge, we spent some computational effort to determine $a_2$, which did not help in making the approximation any better.
+
+
+
+\subsection*{{References}}\label{references_11}
+
+\begin{itemize}%
+\item \url{http://en.wikipedia.org/wiki/Spectral_methods}{Spectral methods}, Wikipedia
+
+\end{itemize}
+A two volume introduction to the theory of the method, starting with the basics:
+
+\begin{itemize}%
+\item Claudio Canuto, M. Yousuff Hussaini, Alfio Quarteroni, Thomas A. Zang: \emph{Spectral methods. Fundamentals in single domains.} 
+(Springer 2006, \url{http://www.zentralblatt-math.org/zmath/en/advanced/?q=an:1093.76002&format=complete}{ZMATH})
+
+\end{itemize}
+\ldots{} and continuing with the explanation of how complex boundary conditions should be handled, with applications to CFD:
+
+\begin{itemize}%
+\item Claudio Canuto, M. Yousuff Hussaini, Alfio Quarteroni, Thomas A. Zang: \emph{Spectral methods. Evolution to complex geometries and applications to fluid dynamics.} (Springer 2007, \url{http://www.zentralblatt-math.org/zmath/en/advanced/?q=an:1121.76001&format=complete}{ZMATH})
+
+\end{itemize}
+Based on the preceding introduction to the theory, the following volume concentrated on the task of implementing concrete algorithms:
+
+\begin{itemize}%
+\item David A. Kopriva: \emph{Implementing spectral methods for partial differential equations. Algorithms for scientists and engineers.} (Springer 2009,
+ \url{http://www.zentralblatt-math.org/zmath/en/advanced/?q=an:1172.65001&format=complete}{ZMATH})
+
+\end{itemize}
+An elementary introduction with special emphasis on spherical coordinates (important for GCMs):
+
+\begin{itemize}%
+\item John P. Boyd: \emph{Chebyshev and Fourier spectral methods. 2nd rev. ed.} (Dover 2001, \url{http://www.zentralblatt-math.org/zmath/en/advanced/?q=an:0994.65128&format=complete}{ZMATH})
+
+\end{itemize}
+For an application of spectral methods to global weather and climate models see:
+
+\begin{itemize}%
+\item T.N. Krishnamurti, H.S. Bedi, V. Hardiker, Leela Watson-Ramaswamy: \emph{An Introduction to Global Spectral Modeling} (Springer, 2nd edition 2010)
+
+\end{itemize}
+\section{Noncommutative Geometry and Stochastic Calculus}
+
+\begin{itemize}%
+\item E. Forgy, \url{http://phorgyphynance.files.wordpress.com/2008/06/blackscholes.pdf}{Noncommutative Geometry and Stochastic Calculus: Applications in Mathematical Finance}
+
+\end{itemize}
+There was also a short companion paper to this article:
+
+\begin{itemize}%
+\item E. Forgy, \url{http://phorgyphynance.files.wordpress.com/2010/05/020529_introncg.pdf}{A Foreward to `{}Noncommutative Geometry and Stochastic Calculus: Applications in Mathematical Finance'{}}
+
+\end{itemize}
+
+
+Noncommutative geometry is a relatively new branch of mathematics pioneered by the Fields Medalist Alain Connes $[1]$
+ during the early '{}80s. Since it'{}s inception, noncommutative geometry has established itself on the forefronts of modern 
+research in mathematics and has been steadily etching a place for itself in theoretical physics. 
+This is particularly true since the appearance of the influential paper by Seiberg and Witten $[2]$,
+ which as of the time of this writing has been referenced nearly a thousand times in just three years according to the
+ preprint archive (http://www.arxiv.org). This marks an amazing explosion of noncommutative geometry onto the scenes of 
+theoretical physics.
+
+The basic idea of noncommutative geometry stems from the observation that there is a deep relation between the collection 
+(commutative algebra) of continuous functions and the (topological) space on which they reside. That is, given the collection of 
+functions, the underlying space could be deduced. Conversely, given the underlying space, the collection of functions could be deduced. 
+This can be summarized via the simple diagram
+
+\begin{displaymath}
+COMMUTATIVE ALGEBRA\leftrightarrow SPACE.
+\end{displaymath}
+At the risk of over simplifying this absolutely intimidating branch of mathematics, the question that noncommutative geometry set out to answer was, ``{}If the commutative algebra of functions gives rise to a concept of space, would a noncommutative algebra give rise to some kind of noncommutative space?''{} In other words,
+
+\begin{displaymath}
+NONCOMMUTATIVE ALGEBRA\stackrel{?}{\leftrightarrow} NONCOMMUTATIVE SPACE.
+\end{displaymath}
+The answer is in the affirmative, and perhaps unsurprisingly, noncommutative spaces play a crucial role in quantum theory.
+
+Since the initial flood of papers on noncommutative geometry \emph{a la} Connes'{} original framework, various other flavors have appeared. The noncommutative geometry of interest in the present paper retains the commutativity of functions, i.e.
+
+\begin{displaymath}
+(f g)(x) = f(x)g(x) = g(x)f(x) = (g f)(x),
+\end{displaymath}
+but noncommutativity is introduced between functions and differentials. For instance, the function $f$ and the differential $d g$
+ need not commute in general, i.e.
+
+\begin{displaymath}
+f(d g)\ne (d g)f.
+\end{displaymath}
+Although this is already a very specialized arena of noncommutative geometry, there is quite a vast array of applications that result from this simple extension of the standard calculus. A highly lucid introduction to the noncommutative geometry of commutative algebras with applications in physics is provided by Muller-Hoissen in $[3]$.
+
+A somewhat surprising result presented in $[3]$ is that finite differences appear naturally within this framework even when considering 
+continuum theories. As a consequence, the machinery is highly adapted to numerical work. Furthermore, an even more striking observation in
+ $[3]$ is that noncommutative geometry naturally accommodates a slight generalization of stochastic calculus. Herein lies the applicability
+ to mathematical finance.
+
+For a moment, reflect on the basic class of objects required in order to build financial models such as the Black-Scholes equations. First, there are scalar functions representing the values of options $V$, tradeables $S$, and numeraires $B$, as well as functions for the number of units $\alpha$, $\Delta$, $\beta$, respectively, of each being held in a portfolio of total value $\Pi$. Next, there are the corresponding differentials $d V$, $d S$, $d B$, $d\alpha$, $d \Delta$, $d \beta$, and $d \Pi$. It is helpful to think of differentials as constituting a class of objects separate from that of scalar functions. To make the distinction between scalar functions and differentials as clear as possible, the former will be referred to as 0-forms, while the latter will be referred to as 1-forms. Hence, the Black-Scholes model begins with a collection of 0-forms and 1-forms.
+
+In the standard Black-Scholes model, each of the 1-forms may be expressed in terms of a Wiener process $d W$ and time $d t$. 
+For example, the spot price of a tradeable asset is often modeled via
+
+\begin{displaymath}
+d S = S(\sigma d W + \mu d t).
+\end{displaymath}
+In this way, 1-forms may be thought of as constituting a two-dimensional vector space with bases $\{d W, d t\}$. 
+The primary algebraic aspect of the stochastic calculus which differs from standard elementary calculus is in how two 1-forms are 
+multiplied. Due to linearity, it suffices to consider the multiplication of basis elements. In stochastic calculus, the multiplication 
+is given by
+
+\begin{displaymath}
+d W d W = dt,\quad d W d t = d t d W = 0; d t d t = 0.
+\end{displaymath}
+As a result,
+
+\begin{displaymath}
+d S d S = \sigma^2 S^2 d t.
+\end{displaymath}
+follows directly from the rules for multiplication. One may then derive the Ito formula
+
+\begin{displaymath}
+\begin{aligned}
+d V 
+&= \frac{\partial V}{\partial S} d S + \frac{\partial V}{\partial t} d t + \frac{1}{2} \frac{\partial^2 V}{\partial S^2} dS dS \\
+&= \frac{\partial V}{\partial S} d S + \left(\frac{\partial V}{\partial t} + \frac{\sigma^2 S^2}{2} \frac{\partial^2 V}{\partial S^2}\right) d t.\end{aligned}
+\end{displaymath}
+from which standard self-financing and no-arbitrage arguments lead to the Black-Scholes equations. Note that the only difference between the stochastic calculus and the standard elementary calculus as far as formal algebra manipulations are concerned lies in the way 1-forms are multiplied. Hence, one could argue that the Black-Scholes equation follows from a formal algebraic argument.
+
+The formulation via noncommutative geometry follows a similar formal algebraic approach.
+ First, the spaces of 0-forms and 1-forms are defined as usual. Next, a derivation $d$ is defined that takes a 0-form $f$
+ and returns the 1-form $d f$ satisfying the product rule
+
+\begin{displaymath}
+d(f g) = (d f)g + f(d g).
+\end{displaymath}
+Note that this is already different from the stochastic calculus, which does not satisfy the product rule. Furthermore,
+ the order in which the terms are written is important due to the fact that 0-forms and 1-forms no longer commute. 
+Once again, as with the stochastic calculus, the space of 1-forms is spanned by the basis $\{d W, d t\}$. 
+However, instead of defining the product of 1-forms as is done in the stochastic calculus, 
+the commutative relations between 0-forms and 1-forms is specified according to the rules
+
+\begin{displaymath}
+[d W,W] = dt,\quad [d W,t] = [d t,W] = 0,\quad [d t,t] = 0
+,
+\end{displaymath}
+where
+
+\begin{displaymath}
+[d f,g] := (d f)g - g(d f)
+\end{displaymath}
+is the commutator. It is quite remarkable that the Ito formula may be derived via noncommutative geometry by 
+simply specifying the commutative relations. Once the Ito formula has been derived, the derivation of the Black-Scholes equations follow.
+
+A new feature of noncommutative geometry that is not present in stochastic calculus is the concept of left and right components of 1-forms. A general 1-form may be written in terms of left components
+
+\begin{displaymath}
+\alpha = \stackrel{\leftarrow}{\alpha_1} d W + \stackrel{\leftarrow}{\alpha_2} d t
+\end{displaymath}
+or in terms of right components
+
+\begin{displaymath}
+\alpha = d W \stackrel{\rightarrow}{\alpha_1} + d t\stackrel{\rightarrow}{\alpha_2}.
+\end{displaymath}
+In general, the left and right components do not coincide due to the noncommutativity. This fact leads to a novel concept of left and right martingales. As discussed in the report, a right martingale is a process that satisfies the heat equation, while a left martingale is a process that satisfies the time-reversed heat equation. This follows from the fact that there are left and right versions of the Ito formula.
+
+It should be pointed out that the report does not represent the culmination of an intense research effort. Rather, this report represents a humble beginning. The author expects that the framework of noncommutative geometry in mathematical finance will ultimately become just as standard as stochastic calculus. Due to its natural adaptability to numerical modeling, it may even become more prominent. The intention of the report is to expose researchers at this early stage to some of the elementary concepts in noncommutative geometry in the hopes that they will help pick up the reigns and develop new models that further push the envelope in financial modeling.
+
+
+\begin{enumerate}%
+\item A. Connes, Noncommutative Geometry. San Diego: Academic Press, 1994.
+\item N. Seiberg and E. Witten, ``{}String theory and noncommutative geometry,''{} JHEP 9909, vol. 032, 1999. (\url{http://www.arxiv.org/abs/hep-th/9908142}).
+\item F. Muller-Hoissen, ``{}Introduction to noncommutative geometry of commutative algebras and applications in physics,''{} in Proceedings of the 2nd Mexican School on Gravitation and Mathematical Physics, (Konstanz), Science Network Publishing, 1998. (Available online at \url{http://kaluza.physik.uni-konstanz.de/2MS/mh/mh.html}).
+
+
+\end{enumerate}
+\section{Introduction to Algebras and Coalgebras}
+Abstract Algebra is increasingly important in Mathematics, Physics, Computer Science, Linguistics, and other subjects.
+Its quite suprising when you first learn that Algebra has moved beyond mere group and ring theory. 
+This essay is to look at some of the more exciting structures in this area of Mathematics. 
+The primary source was the future monograph~\cite{AlgebraicOperads}, however many other sources were
+used in creating this document. The author makes no apology for lack of originality in this piece,
+and states a lot of the results without proof. The interested reader who wishes to find the proofs
+can consult the various references which are included in the bibliography.
+Once again, the aim is to introduce these topics to a good Masters student so that they may gain both
+an appreciation of Algebra and Coalgebra in itself, or alternatively to understand the literature
+in Theoretical Physics or Mechanics~\cite{Ben-Aryeh2004,QuantumFieldsandStrings,QuantumGroups,Nielsen2000,GeometricPhasesinClassicalandQuantum,GeometryPhysicsTopology}
+\subsection{Associative Algebras}
+An \emph{associative algebra} over $\mathbb{K}$ is a vector space A equipped with a binary operation
+(linear map)
+\begin{displaymath}
+ \mu:A \otimes A \rightarrow A
+\end{displaymath}
+which is associative, i.e. $\mu \circ(\mu \otimes id) = \mu \circ (id \otimes \mu).$
+Here id is the identity map from A to A (sometimes denoted by $id_{A}$), and the operation $\mu$
+is called the \emph{product}. Denoting ab:=$\mu(a \otimes b)$, associativity reads just like Kindergarden:
+\begin{displaymath}
+ (ab)c = a(bc).
+\end{displaymath}
+An associative algebra is said to be \emph{unital} if there is a map $u:\mathbb{K} \rightarrow A$
+such that $\mu \circ (u \otimes id) = id = \mu \circ (id \otimes u).$ We denote by $1_{A}$ or simply
+by 1 the image of $1_{\mathbb{K}}$ in A under $u$. With this notation unitality reads:
+$1a = a = a1.$
+An \emph{algebra morphims} (or simply morphism) is a linear map $f:A \rightarrow A'$ such that f(ab) = f(a)f(b).
+If A is also unital, then we further assume f(1) = 1.
+\phantom{xxx}The category of nonunital associative algebras is denoted by As-alg, and teh category of unital
+associative algebras by uAs-alg. 
+\subsection{Free Associative Algebras}\cite{AlgebraicOperads}
+The free associative algebra over the vector space V is an associative algebra F(v) equipped with a 
+liner map i:$V \rightarrow \mathcal{F}$(V) which satisfied the following universal condition:
+any map $f:V\rightarrow A$, where A is an associative algebra, extends uniquely into an algebra morphism
+$\hat{f}:\mathcal{F}(V)\rightarrow A$. We can draw a commutative diagram for this as well. 
+An important observation is that the free algebra over V is well defined up to a unique isomorphism.
+Categorically $\mathcal{F}$ is a functor\ref{Functor} from the category of vector spaces to the category of associative 
+algebras, which is left adjoint to the forgetful functor assigning to A its underlying vector space:
+\begin{displaymath}
+ Hom_{As-alg}(F(V),A) \cong Hom_{Vect}(V,a)
+\end{displaymath}
+These are forgetful functors $As-alg \rightarrow Vect \rightarrow Set$ and sometimes it is useful
+to consider the free associative algebra over a set X. This is the same as the associative algebra over the space $
+\mathbb{K}[X]$ spanned by X since the functor is given by $X \rightarrow \mathbb{K}[X]$ is left adjoint to
+the functor Vect $\rightarrow$ Set. More information on functors and categories is given in the appendix.
+
+\section{Tensor Algbera}~\cite{Lang,Yokonuma1992,Nielsen2000}
+In this section we introduce some facts from Tensor Algebra, and subsequently Tensor products over noncommutative rings. 
+\subsection{Tensors over Linear Spaces}
+Before dealing with Tensors over noncommutative rings we need to start with the simplest
+case. This subject is an extension of linear algebra sometimes called 'multilinear algebra'. Due to the 
+historical background of Tensors (i.e. the intertwining of the subject with Mathematical Physics
+and Mechanics) a reference used in this writing was by a Mathematician working in Mechanics ~\cite{Marsden}.
+We will neglect Manifolds in this work, however we shall note that - ultimately our constructions will be
+done on each fiber of the tangent bundle, producing a new vector bundle~\cite{GeometricPhasesinClassicalandQuantum,
+Marsden,FoundationsDiffMan}. 
+Let $\mathbf{E,F,...}$ denote Banach Spaces ,
+and $L^{k}(\mathbf{E_{1},...,E_{k};F}$) denotes the vector space of continuous
+k-multilinear maps of $\mathbf{E_{1}}\times...\times\mathbf{E_{k}}$ to $\mathbf{F}$
+The special case $L(\mathbf{E},\mathbb{R})$ is denoted $\mathbf{E^{*}}$,
+the dual space of \textbf{E}. If \textbf{E} is finite dimensional and ${e_{1},...,e_{n}}$ there is a 
+unique ordered basis ${e^{1},...,e^{n}}$, such that $\braket{e^{j},e_{i}} = \delta^{j}_{i}$ where
+the Kronecker delta follows the standard rules. Furthermore , for each $v \in \mathbf{E}$,
+$v=\Sigma_{i=1}^{n}\braket{e^{i},v}e_{i}$ and $\alpha=\Sigma_{i=1}^{n}\braket{\alpha,e_{i}}e^{i}$
+for each $\alpha = \mathbf{E}^{*}$, whereas <,> denotes the pairing between 
+\textbf{E} and $\mathbf{E^{*}}$. Employing the \textbf{summation convention} we can drop the summation
+symbols.(For more on the functional analysis alluded to here see chapter 2 of ~\cite{Marsden} or \cite{RudinFA})
+\subsection{Tensor Products}
+When learning Abstract Algebra, it becomes evident that Tensor Products are essential knowledge.
+For a Physicist orientated introduction which is included in the appendix~\ref{TP}\cite{Nielsen2000} and for a more Pure Mathenmatical Introduction. 
+\subsection{Tensor module, tensor algebra}
+By definition the \textit{tensor algebra} over the vector space V is the \textit{tensor module}
+\begin{equation}
+  T(V):=\mathbb{K}1\oplus V \oplus ... \oplus V^{\otimes n} \oplus ...
+ \end{equation}
+equipped with the \textit{concatenation} product $T(V)\otimes T(V) \rightarrow T(V)$ given by
+$v_{1}...v_{p}\otimes v_{p+1} ... v_{p+q} \Rightarrow v_{1}...v_{p}v_{p+1}...v_{p+q}.$
+This operation is clearly associative and 1 is taken as a unit. Observer that T(V) is augmented by $\epsilon
+(v_{1}...v_{n}) = 0$ for $n \geq 1$ and $\epsilon(1) = 1$.
+The map $\epsilon: T(V) \rightarrow \mathbb{K}$ is called the \textit{augmentation}. For a homogenous
+element $x \in V^{\otimes n},$ the integer n is called the \textit{weight} of x. We say that T(V) is 
+\textit{weight-graded}. 
+\paragraph{} The \textit{reduced tensor algebra} $\bar{T}(V)$ is the \textit{reduced tensor module} 
+$\bar{T}(V):=V \oplus ... \oplus V^{\otimes n} \oplus ...$
+equipped with the concatenation product. It is a nonunital associative algebra. 
+\subsection{Tensor Products from a Pure Mathematics point of view}
+In this section we write a bit about \textbf{tensor product of algebras}\cite{Lang,Yokonuma1992}
+We start first with commutative rings R, of course in modern mathematics noncommutative rings are 
+extremely important, and supercommutative rings. Of course these sorts of concepts are beyond
+the scope of this article. 
+By an \textbf{R-algebra} we mean a ring homomorphism $R \rightarrow A$ into a ring A such that the image
+of R is contained in the center of A.
+Let A, B be R-algebras. We shall make $A \otimes B$ into an R-aglebra. 
+
+\begin{align}
+ Given (a,b) \in A\times B, we\;have\; an\; R\; bilinear\; map
+\\ M_{a,b}: A \times B \rightarrow A \otimes B 
+\\ such that M_{a,b}(a',b') = aa' \otimes bb'
+\end{align}
+
+Hence $M_{a,b}$ induces an R-linear map $m_{a,b}:A \times B \rightarrow A \otimes B$ such that
+$m_{a,b}(a',b')= aa' \otimes bb'$. But $m_{a,b}$ depends bilinearly on a and b, so we obtain a unique 
+R-bilinear map
+$A \otimes B \times A \otimes B \rightarrow A \otimes B$ 
+such that $(a \otimes b)(a' \otimes b') = aa' \otimes bb'$
+This map is obviously associative, and we have a natural ring homomorphism 
+$R \rightarrow A \otimes B$ given by $c \mapsto 1 \otimes c = c \otimes 1$
+Thus $A \otimes B$ is an R-algebra, called the ordinary tensor product. 
+\subsection{Multilinear Algebra over Rings} 
+ This section is inspired by the first chapter on Mulitlinear Algbera in \cite{QuantumFieldsandStrings},
+and discussions with Prof Poncin.
+The tensor product $M\otimes_{R}N$ of two modules M, N over a \emph{commutative} ring R is defined 
+as the
+quotient of the free R-module $R^{(M \times N)}$ generated by M $\times$ N - and thus made up by 
+the combinations 
+$
+ \sum_{(x,y)\in M \times N} r_{(x,y)}e_{(x,y)},
+$
+where only a finite number of coefficients $r_{(x,y)}\in R$ are nonzero - by the R-submodule generated
+by the elements that 'correspond to R-bilinearity', i.e. by the elements that 
+'correspond to R-bilinearity',
+i.e. by the elements
+
+
+\begin{displaymath}
+ -e_{(x+x',xy)} + e_{(x,y)} + e_{(x',y)}, -e_{(x,y+y')}+e_{(x,y)}+e_{(x,y')},\end{displaymath}
+    \begin{displaymath}
+    e_{(rx,y)} + re_{(x,y)}, -e_{(x,ry)}+re_{(x,y)}
+    \end{displaymath}
+                                                                         
+
+
+
+This tensor product R-module together with the obvious R-bilinear map 
+$
+ \otimes: M \times N \ni (x,y) \Rightarrow x \otimes y = [e_{(x,y)}] \in M \otimes_{R} N
+$
+are universal.[\ref{Universal}]
+ In the case of a \emph{noncommutative} ring R, we consider a right R-module N and a left R-module
+N and define the tensor product $M \otimes_{R} N$ as a $\mathbb{Z}-module$, i.e. as an abelian group, and 
+more precisely as the quotient of the free $\mathbb{Z}-module$ $\mathbb{Z}^{(M \times N)}$ generated by 
+$M \times N$, by the $\mathbb{Z}$-submodule generated by the elements that 'correspond to weakened bilinearity',
+i.e. by the elements \\
+\begin{center}
+$ -e_{(x+x',y)} + e_{(x,y)} + e_{(x',y)}, -e_{(x,y+y')}+e_{(x,y)}+e_{(x,y')}$\\
+$-e_{(xr,y)} + e_{(x,ry)} $\end{center}
+The tensor product $\mathbb{Z}-module$ $M \otimes_{R} N$ 
+and the naturally weakly bilinear mapping\begin{displaymath}
+ \otimes: M \times N \ni (x,y) \Rightarrow x \otimes y = [e_{(x,y)}] \in M \otimes_{R} N
+\end{displaymath}
+are universal. This means that functor [\ref{Functor}] $-\otimes_{R}N$ from $\mathtt{Mod_{R}}$ to \texttt{AbGrp}
+is the left adjoint of the functor$Hom_{\mathbb{Z}}(N, -)$ , where the right module structure on $Hom_{\mathbb{Z}}(N, P)$
+is defined by (fr)(N) = f(rn), i.e. we have
+\begin{displaymath}
+ Hom_{\mathbb{Z}}(M \otimes_{R} N, P) \simeq  Hom_{R}(M, Hom_{\mathbb{Z}}(N,P)
+\end{displaymath}
+functorially in M and P. In general it is not possible to define an R-module structure on $M \otimes_{R} N$
+
+Now of course we can go on to define more exotic algebraic structures such as 'superalgebras', or tensor products
+over \emph{supercommutative rings}. However we consider these beyond the scope of this essay. 
+\subsection{Commutative Algebra}
+By definition a \textit{commutative algebra} is a vector space A over $\mathbb{K}$ equipped with a
+binary operation $\mu:A \otimes A \rightarrow A,\mu(a,b)=(a,b),$ which is both associative and commutative
+(i.e. symmetric): 
+$
+ ab = ba
+$
+In terms of the \textit{switching map} 
+$
+ \tau:A \otimes A \rightarrow A \otimes A
+$
+defined by $\tau(x,y)=(y,x)$, the commutaton condition read $\mu \circ \tau = \mu$.
+  Sometimes one needs to work with algebras whose operation satisfies the symmetry condition but isn't associative
+It is proposed in \cite{AlgebraicOperads} to call these \textit{commutative magmatic algebras}.
+\phantom{xxxx}The free unital commutative algebra over the vector space V is
+the \textit{symmetric algebra}
+$
+ S(V) = \bigoplus_{n\geq0}S^{n}(V):= \bigoplus_{n\geq 0}(V^{\otimes n})_{\mathbb{S}_{n}}
+$
+There is a lot more detail that one can go into for Commutative Algebras
+This is outside of the scope of this essay, so the following references are recommended~\cite{AlgebraicOperads,Lang,Yokonuma1992}
+\subsection{Modules}
+Modules are intuitively a 'vector space over a ring', but this is just words. Let us consider the
+definition of a Module. 
+ A \textit{left module} M over an algebra A is a vector space equipped with a linear map
+\begin{displaymath}
+ \lambda: A \otimes M \rightarrow M, \lambda(a,m)=am,
+\end{displaymath}
+called the \textit{left action}, which is compatible with the product and the unit of A.
+See \cite{AlgebraicOperads} and \cite{CategoryTheory} for diagrams representing this.
+There is a similar notion of \textit{right module} involving a right action $\lambda'$:
+$M \otimes A \rightarrow A, \lambda'(m,a) = ma.$ Finally, a \textit{bimodule} M over the algebra A
+is a vector space which is both a left module and a right module and which satisfy (a'm)a=a'(ma) for any
+$a,a'\;\in\;A$ and $m\;\in\;M.$
+\paragraph{}For any vector space V the \textit{free left A-module} over V is 
+$M:= A \otimes V$ equipped with the obvious left operation. Similarly the \textit{free A-bimodule} over V 
+is M:=$A \otimes V \otimes A.$
+Let
+ $0 \rightarrow M \rightarrow A' \rightarrow A \rightarrow 0$
+be an exact sequence of associative algebras such that the product in M is 0. Then it 
+is easy to check that M is a bimodule over A.
+Some examples of modules
+\begin{itemize}
+ \item If K is a field, then the concepts "K-vector space" (a vector space over K) and K-module are identical.
+\item The concept of a Z-module agrees with the notion of an abelian group. 
+That is, every abelian group is a module over the ring of integers $\mathbb{Z}$ in a unique way. 
+For n > 0, let nx = x + x + ... + x (n summands), 0x = 0, and (−n)x = −(nx). Such a module need not have a basis—groups containing torsion elements do not. (However, a finite field, considered as a module over the same finite field taken as a ring, does have a basis.)
+\item If R is any ring and n a natural number, then the cartesian product $R^{n}$ 
+is both a left and a right module over R if we use the component-wise operations. 
+Hence when n = 1, R is an R-module, where the scalar multiplication is just ring 
+multiplication. The case n = 0 yields the trivial R-module ${0}$ 
+consisting only of its identity element. 
+Modules of this type are called free and if R has invariant basis number 
+(e.g. any commutative ring or field) the number n is then the rank of the free module.
+\item If S is a nonempty set, M is a left R-module, and $M^{S}$ is the collection of all functions f : S $\rightarrow$
+ M, then with addition and scalar multiplication in $M^{S}$ defined by (f + g)(s) = f(s) + g(s) and 
+(rf)(s) = rf(s), $M^{S}$ is a left R-module. 
+The right R-module case is analogous. 
+In particular, if R is commutative then the collection of R-module homomorphisms 
+h : M $\rightarrow$ N (see below) is an R-module (and in fact a \textit{submodule} of $N^{M}$).
+\item If X is a smooth manifold, then the smooth functions from X to the real numbers form a ring 
+$C^{\infty}(X)$. 
+The set of all smooth vector fields defined on X form a module over $C^{\infty}(X)$, and so 
+do the tensor fields and the differential forms on X. 
+More generally, the sections of any vector bundle form a projective module over $C^{\infty}(X)$, 
+and by Swan's theorem, every projective module is isomorphic to the module of sections of some
+ bundle; the category of 
+$C^{\infty}(X)$-modules and the category of vector bundles over X are equivalent.
+\end{itemize}
+\section{Lie Algebras and Coalgebras}
+Firstly one can't overestimate the importance of Lie Algebras in Mathematical and Theoretical Physics. 
+They are an algebraic structure whose main use is in studying geometric objects
+ such as Lie groups and differentiable manifolds. Subsequently they are of utmost importance in 
+Quantum Mechanics, Particle Physics and of course in their own right. Some of this material was
+inspired by~\cite{FoundationsDiffMan,Ben-Aryeh2004}.
+Whilst those of us with the Abstract abilities of Grothendieck may wonder what is the point in including
+applications. For most readers some relevance to what Samuel Johnson termed 'reality 
+in all its kickability' is necessary.
+The further subsections will introduce coalgebras, naively 'coalgebras are the dual of an algebra'
+\subsection{Lie Algebras}
+
+Let us begin the definition:
+ A \textit{Lie Algebra} is a vector space $\mathfrak{g}$ over $\mathbb{K}$ equipped with a binary
+operation c: $\mathfrak{g}\otimes \mathfrak{g} \rightarrow \mathfrak{g}$, $c(x,y):=[x,y],$(c for 'crochet'
+in French) called \textit{bracket}, which is anti-symmetric:
+$
+ [x,y] = -[y,x], equivalently c \circ \tau = -c
+$
+and satisfies the \textit{Leibniz identity}
+$ [[x,y],z]=[x,[y,z]]+[[x,z],y],
+$
+equivalently $c \circ (c \otimes id) = c \circ (id \otimes c) +
+c \circ (id \otimes c)\circ (id \otimes \tau).$
+
+In the literature the last relation is, most of the time replaced by the \textit{Jacobi identity}
+$
+ [[x,y],z]+[[y,z],x]+[[z,x],y]\;=\;0.
+$
+These are equivalent under the anti-symmetry condition, but not otherwise.
+The free Lie algebra over the vector space V is denoted \textit{Lie}(V).
+\subsection{Universal enveloping algebra}
+Mathematically speaking the construction of a universal enveloping algebra allows
+one to move from a non-associative algebra to a more familiar associative algebra.
+Construct a functor: \textit{Lie}-alg $\rightarrow$ \textit{As}-alg as follows. Let
+$\mathfrak{g}$ and let T($\mathfrak{g}$) be the tensor algebra over the vector space $\mathfrak{g}$.
+By definition the \textit{universal algebra} U($\mathfrak{g}$) is the quotient of T($\mathfrak{g}$) 
+by the two-sided ideal generated by the elements 
+$
+ x \otimes y - y \otimes x -[x,y], for all x,y \in \mathfrak{g}.
+$
+
+ The functor U: Lie-alg $\rightarrow$ As-alg is left adjoint to the functor
+ $(-)_{Lie}:As-alg \rightarrow Lie-alg.$
+
+\subsection{Coassociative Coalgebras}
+\begin{definition}
+ A \textit{coassociative algebra} is a vector space C with comultiplication $\Delta:C \rightarrow C \otimes
+C$ and a counit map $\epsilon:C\;\rightarrow\;\mathbb{K}$ satisfying 
+(a) coassociativity $(id \otimes \delta)\delta = (\delta \otimes id)\delta$
+(b) counitary property $(id \otimes \epsilon)\delta = (\epsilon \otimes id)\delta = id_{C}$
+\end{definition}
+Thus a coalgebra~\cite{CoalgebraRep, AlgebraicOperads} is obtained by dualizing the associative multiplication map $A \otimes A \rightarrow A$
+and unit map $\mathbb{K} \rightarrow A.$ So a finite dimensional coalgebra is the linear dual of a finite
+dimensional algebra (and vice versa). While this duality might lead an air of redundancy to coalgebra theory,
+there are properties enjoyed by infinite dimensional coalgebras which are denied infinite dimensional algebras.
+\subsection{From algebra to coalgebra and vice-versa}
+Let $V^{*}:=Hom(V,\mathbb{K})$ be the linear dual of the space V. There is a canonical map
+$\omega:V^{*} \otimes V^{*} \rightarrow (V \otimes V)^{*}$ given by $\omega(f \otimes g)(x \otimes y)=f(x)
+g(y)$ (we work in the non-graded framework). When V is finite dimensional $\omega$ is an isomorphism.
+\paragraph{}\phantom{kkk}If $(C,\Delta)$ is a coalgebra, then $(C^{*},\Delta^{*} \circ \omega)$ is an 
+algebra. 
+\phantom{kkk}If ($A,\mu$) is an algebra which is finite dimensional, then $(A^{*},\omega^{-1}\circ \mu^{*})$
+is a coalgebra. 
+\subsection{Coderivation}
+Let C = $(C,\Delta)$ be a conilpotent coalgebra. By a definition a \textit{coderivation} is a linear map
+$d:C \rightarrow C$ such that $d(1) = 0$ and 
+\begin{displaymath}
+ \Delta \circ d = (d \otimes id)\circ \Delta + (id \otimes d) \circ \Delta.
+\end{displaymath}
+We denote by Coder(C) the space of coderivations of C. 
+\begin{proposition}
+ If C is cofree, i.e. $C = T^{c}(V)$ for some vector space V, then a coderivation d $\in$ Coder(C)
+is completely determined by its weight 1 component C 
+\end{proposition}
+\section{Comodule}
+Just as there is a dual to an algebra, there is also a dual to a module. 
+A \textit{left comodule} N over a coalgebra C is a vector space endowed with a linear map
+\begin{displaymath}
+ \Delta^{l}:N \rightarrow C \otimes N,
+\end{displaymath}
+which is compatible with the coproduct and the counit. 
+It is called a \textit{coaction map}. The notion of a \textit{right comodule} using 
+$\Delta^{r}:N \rightarrow N \otimes C$ is analogous. A \emph{co-bimodule} is a left and right comodule 
+such that the two coaction maps satisfy the coassociativity condition:
+\begin{displaymath}
+ (id_{C} \otimes \Delta^{r})\circ \Delta^{l}=(\Delta^{l} \otimes id_{C})\circ \Delta^{r}.
+\end{displaymath}
+For instance, any coalgebra is a co-bimodule over itself. 
+\subsection{Cocommutative coalgebra}
+An associative algebra $(C,\Delta)$ is said to be \emph{cocommutative} if the coproduct 
+$\Delta$ satisfies the following symmetry condition:
+$\Delta = \Delta \circ \tau.$
+In other words we assume that the image of $\Delta$ lies in the invariant space $(C \otimes C)^{\mathbb{S}_{2}}$
+where the generator of $\mathbb{S}_{2}$ acts via $\tau$. The cofree commutative coalgebra over the space V 
+(taken in the category of conilpotent commutative coalgebras of course) can be identified to the symmetric
+module S(V) equipped with the following coproduct:
+$\Delta(x_{1}...x_{n})=\sum_{\delta \in Sh(i,j),i+j=n} x_{\delta^{-1}(1)}....x_{\delta^{-1}(i)}\otimes
+x_{\delta^{-1}(i+1)}...x_{\delta^{-1}(i+j)},$
+where Sh(i,j) is the set of (i,j)-shuffles.
+
+
+\subsection{Bialgebra}~\cite{Lang,AlgebraicOperads}
+We introduce the classical notions of bialgebra and Hopf Algebra, which are characterized by the Hopf
+compatibility relation. 
+\begin{definition}
+ A \textit{bialgebra} $\mathcal{H}=(\mathcal{H},\mu,\bigtriangleup,u,c)$ over $\mathbb{K}$ is a vector space
+$\mathcal{H}$ equipped with an algebra structure $\mathcal{H} = (\mathcal{H},\mu,u)$ and a coalgebra structure
+$\mathcal{H}=(\mathcal{H},\bigtriangleup,c)$ related by the \textit{Hopf compatability relation} 
+\begin{displaymath}
+ \bigtriangleup(xy) = \bigtriangleup(x)\bigtriangleup(y),
+\end{displaymath}
+where xy := $\mu(x\otimes y)$ and the product on $\mathcal{H} \otimes \mathcal{H}$ (in the non-graded
+case) by $(x \otimes y)(x' \otimes y') = xx' \otimes yy'.$ It is often better to write the compatability
+relation in terms of $\bigtriangleup$ and $\mu$. Then one has to introduce the switching map
+\begin{displaymath}
+ \tau:\mathcal{H} \otimes \mathcal{H} \rightarrow \mathcal{H} \otimes \mathcal{H}, \tau(x \otimes y):= y \otimes x.
+ \end{displaymath}
+ 
+ With this notation the compatability relation reads:
+\begin{displaymath}
+ \boxed{\bigtriangleup \circ \mu = (\mu \otimes \mu)\circ(is \otimes \tau \otimes id)}\circ(\bigtriangleup \otimes \bigtriangleup): \mathcal{H} \otimes \mathcal{H} \rightarrow \mathcal{H} \otimes \mathcal{H}.
+\end{displaymath}
+The boxed formula is $\mu_{\mathcal{H}\otimes \mathcal{H}}$
+
+
+
+\end{definition}
+\subsection{Hopf Algebras and Quantum Groups}
+\paragraph{}The motivation behind studying Hopf Algebras is their links to Quantum Groups.
+The following section is inspired by both ~\cite{AlgebraicOperads} and Shahn Majid's article on
+ Quantum Groups
+in the Princeton Companion to Mathematics\cite{Princeton}.
+There are at least three different paths that lead to the objects known today as quantum groups. They
+could be summarized as quantum geometry, quantum symmetry and self duality. Each of these are important,
+and each could be a reason to invent quantum groups. This article will only consider the 
+'quantum geometric'
+reason for inventing Quantum Groups. 
+\subsubsection{Quantum Geometry}
+Anyone who has ever had the pleasure to study Physics,
+ knows that one of the biggest leaps in 20th century 
+thought was the discovery that Classical Mechanics could be replaced by a process of 
+'quantization' with 
+quantum mechanics. In quantum mechanics, in which the
+space of possible positions and momenta of a par-
+ticle is replaced by the formulation of position and
+momentum as mutually noncommuting operators. This
+noncommutativity underlies Heisenberg’s “uncertainty
+principle,” but it also suggests the need for a more gen-
+eral notion of geometry in which coordinates need not
+commute. One approach to noncommutative geometry
+is discussed in operator algebras~\cite{Princeton} (this is the approach that
+Alain Connes is famed for). However, another approach is to note that geometry really
+grew out of examples such as spheres, tori, and so
+forth, which are lie groups or objects closely
+related to Lie groups. See the following for introductions to Lie Groups
+\cite{GeometryPhysicsTopology,GeometricPhasesinClassicalandQuantum}.
+ \paragraph{}\phantom{xxx}If one wants to “quantize” geometry, one should first think about how to generalize
+basic examples like this: in other words, one should
+try to define “quantum Lie groups” and associated
+“quantum” homogeneous spaces.
+The first step is to consider geometrical structures
+not so much in terms of their points but in terms of
+corresponding algebras. This duality between geometry and algebra
+is a very profound method in Mathematical Physics. 
+For example, the group $SL_{2} $($\mathbb{C}$)
+is defined as the set of 2 $\times$ 2 matrices of com-
+plex numbers such that $\alpha\delta$ − $\beta\gamma$ = 1. We can think
+of this as a subset of $\mathbb{C}^{4}$ , and indeed not just a subset
+but a variety  The natural class of functions
+associated with this variety is the set of polynomials
+in four variables (which are defined on $\mathbb{C}^{4}$) restricted
+to the variety. However, if two polynomials take equal
+values on the variety, then we identify them. In other
+words, we take the algebra of polynomials in four vari-
+ables a, b, c, and d and quotient by the
+ideal  generated by all polynomials of the
+form ad − bc − 1. Let us call the
+resulting algebra $\mathbb{C}[SL_{2} ].$
+\paragraph{}\phantom{xxx}We can do the same for any subset X $\subset \mathbb{C}^{n}$ that
+is defined by polynomial relations. This gives us a
+precise one-to-one correspondence between subsets of
+this type and certain commutative algebras equipped
+with n generators. Let us write $\mathbb{C}[X]$ for the algebra
+that corresponds to X. As with many similar construc-
+tions a suitable map from X to Y gives
+rise to a map from $\mathbb{C}[Y ]$ to $\mathbb{C}[X]$. More precisely, the
+map $\phi$ from X to Y has to be polynomial (in a suitable
+sense) and the resulting map from $\mathbb{C}[Y ]$ to $\mathbb{C}[X]$ is an
+algebra homomorphism $\phi^{*}$ that satisfies the formula
+$\phi^{*}$ (p)(x) = p($\phi$x) for every $x \in X$.
+Going back to our example, the set $SL_{2 }(\mathbb{C})$ has a group
+structure $SL_{2 }(\mathbb{C}) \times SL_{2}(\mathbb{C}) \rightarrow SL_{2} (\mathbb{C})$ defined by the
+matrix product. The set $SL_{2}(\mathbb{C} \times SL_{2}(\mathbb{C}$ is a variety in
+$\mathbb{C}^{8}$ and the matrix product depends in a polynomial way
+on the entries in the matrices, so we obtain an algebra
+homomorphism $\Delta : \mathbb{C}[SL_{2} ] → \mathbb{C}[SL_{2} ] \otimes \mathbb{C}[SL_{2} ]$, which is
+known as the coproduct. (The algebra $\mathbb{C}[SL_{2} ] \otimes \mathbb{C}[SL_{2} ]$
+is isomorphic to $\mathbb{C}[SL_{2} \times SL_{2} ].$) It turns out that $\delta$ can
+be expressed by the formula
+\begin{displaymath}
+\Delta \begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} a & b \\ c & d \end{pmatrix}
+\otimes \begin{pmatrix} a & b \\ c & d \end{pmatrix}
+\end{displaymath}
+This formula needs a word or two of explanation: the
+variables a, b, c, and d are the four generators of the
+algebra of polynomials in four variables (and hence of
+its quotient by ad − bc − 1), and the right-hand side
+is a shorthand way of saying that $\Delta a = a \otimes a + b \otimes c$,
+and so on. Thus, $\Delta$ is defined on the generators by a
+sort of mixture of tensor products~\ref{TP} and matrix
+multiplication.
+One can then show that the associativity of matrix
+multiplication in SL2 is equivalent to the assertion
+that $(\Delta \otimes id)\Delta$ = $(id \otimes \Delta)\Delta$. To understand what these
+expressions mean, bear in mind that $\Delta$ takes elements
+of $\mathbb{C}[SL_{2} ]$ to elements of C[SL2 ] ⊗ C[SL2 ]. Thus, when
+we apply the map $(\Delta \otimes id)\Delta$, for example, we begin
+by applying $\Delta$, and thereby creating an element of
+$\mathbb{C}[SL_{2} ] \otimes \mathbb{C}[SL_{2} ]$. This element will be a linear combi-
+nation of elements of the form $p \otimes q$, each of which will
+then be replaced by $\Delta p \otimes q$.
+Similarly, one can express the rest of the group struc-
+ture of $SL_{2 }(\mathbb{C})$ equivalently in terms of the algebra
+$\mathbb{C}[SL_{2} ]$. There is a counit map $\epsilon:$ $\mathbb{C}[SL_{2} ] \rightarrow k$, which
+corresponds to the group identity, and an antipode map
+$S : \mathbb{C}[SL_{2} ] \rightarrow \mathbb{C}[SL_{2} ]$, which corresponds to the group
+inversion. The group axioms appear as equivalent prop-
+erties of these maps, making $\mathbb{C}[SL_{2} ]$ into a “Hopf algebra`` or ''quantum group``
+\begin{definition}
+ A \textit{Hopf algebra} over a field $\mathbb{K}$ is a quadruple
+$(H, \Delta,\epsilon , S)$, where
+(i) H is a unital algebra over $\mathbb{K}$;
+(ii) $\Delta : H \rightarrow H \otimes H, : H \rightarrow \mathbb{K} $are algebra homo-
+morphisms such that ($(\Delta \otimes id)\Delta$ = $(id \otimes \Delta)\Delta$ and
+$(\epsilon \otimes id)\Delta = (id \otimes \epsilon)\Delta = id$;
+(iii) $S : H \rightarrow H$ is a linear map such that $m(id \otimes S)\Delta =
+m(S\otimes id)\Delta = 1\epsilon$ , where m is the product operation
+on H.
+
+
+\end{definition}
+
+There are two great things about this formulation.
+The first is that the notion of a Hopf algebra makes
+sense over any field. The second is that nowhere did
+we demand that H was commutative. Of course, if H is
+derived from a group, then it certainly is commutative
+(since multiplying two polynomials is commutative), so
+if we can find a noncommutative Hopf algebra, then we
+have obtained a strict generalization of the notion of
+a group. The great discovery of the past two decades
+is that there are indeed many natural noncommutative
+examples. For example, the quantum group $\mathbb{C}_{q} [SL_{2} ] $is defined
+as the free associative noncommutative algebra on
+symbols a, b, c, and d modulo the relations
+\begin{displaymath}
+ba = qab, bc = cb, ca = qac, dc = qcd,
+\end{displaymath}
+\begin{displaymath}
+db = qbd, da = ad + (q − q^{−1} )bc, ad − q^{−1} bc = 1.
+\end{displaymath}
+This forms a Hopf algebra with $\Delta$ given by the same
+formula as it is for $\mathbb{C}_{q} [SL_{2} ] $ and with suitable maps and
+S. Here q is a nonzero element of $\mathbb{C}$, and as q $\rightarrow$ 1 one
+obtains $\mathbb{C}_{q} [SL_{2} ] $. This example generalizes to canonical
+examples $\mathbb{C}_{q}$ [G] for all complex simple Lie groups G.
+\begin{remark}
+Much of group theory and Lie group theory can be
+generalized to quantum groups. 
+\end{remark} 
+For example, Haar integration is a linear map $\int: H \rightarrow k$ that is translation
+invariant in a certain sense that involves $\Delta$. If it exists,
+it is unique up to a scalar multiple, and it does indeed
+exist in most cases of interest, including all finite-
+dimensional Hopf algebras. Likewise, the notion of a
+complex of differential forms $(\Omega, d)$ makes
+sense over any algebra H as a proxy for a differential
+structure. Here, $\Omega = \oplus_{n} \Omega ^{n}$ is required to be an asso-
+ciative algebra generated by $\Omega^{0} = H$ and $\Omega ^{1}$ , but one
+does not assume that it is graded-commutative as in
+the classical case. When H is a Hopf algebra one canask that $\Omega$ is translation invariant, again in a certain
+sense that involves the coproduct $\Delta$. In this case both $\Omega$
+and its cohomology as a complex are super
+(or graded) quantum groups. The axioms of a (graded) Hopf algebra were originally introduced by Heinz Hopf
+in 1947 precisely to express the structure of the cohomology ring of a group, so this result brings us back
+full circle to the origins of the subject. For most quantum groups, including all the $\mathbb{C}_{q} [G]$, one has a natural minimal complex $(\Omega, d)$. Thus, a “quantum group” is not merely a Hopf algebra but has additional structure
+analogous to that of a Lie group.
+ This area of Mathematics, is rich and whilst it is comparatively modern - these Quantum Groups have occured in many 
+areas of Physics and Mathematics. Background on this topic is found in the wikipedia entries, in book form an excellent introduction 
+is provided in \cite{Princeton} or Shahn Majids book on Quantum Groups \cite{QuantumGroups}
+\section{Conclusion}
+The conclusion is personal, the author feels that when one struggles through a Mathematical text
+ sometimes it feels as if 'the human' is forgotten about. What we all share is our humanity, and
+we all sometimes feel inadequate at the scope and complexity of the physical/mathematical world. 
+Tomonaga the celebrated master of Quantum Field Theory once in his notebook wrote
+'Why, can't nature be easier to understand'. Reminders like this are necessary for all Students.
+And one should remember that 'we are all students'. 
+\phantom{mm} We've started with commutative algebra, associative algebras and gone on to define and include examples
+of Modules, Multilinear Algebra, Lie Algberas, Coalgebras and Hopf Algebras.
+This is of course a rather quick journey through deep areas of Mathematics. However the aim of this 
+'essay' was to try to explain some of the most powerful techniques and concepts.
+  Mathematics has many levels of understanding, one often struggles to define when one
+'understands' a topic. For instance one can't say one understands Quantum Groups unless one understands
+the alternative representations, and the details of this area already extend into a few monographs.
+ Nonetheless Abstract Algebra is one of the most powerful languages in Theoretical Physics
+ and Mathematics.
+Tensors and Tensor Products (over vector spaces or modules) are used in a lot of the sort of Mathematical
+Physics that excites the general public and the naively ambitious student (string theory, noncommutative geometry,Quantum Information)~\cite{QuantumFieldsandStrings,Ben-Aryeh2004,Nielsen2000}. 
+Obviously such topics are well beyond the abilities of the author currently. However one learns Mathematics because it is beautiful, and one also learns it to learn more complicated
+things. So an appeal to the reader is to not feel disheartened when struggling with 'the easy stuff'.
+Einstein famously struggled with the Tensor Calculus, and very few of the notions introduced in this 
+piece are included in the standard 'bachelor' or undergraduate curriculum. 
+ It is hoped that the student can now understand Coalgebras or the various areas of Theoretical Physics
+alluded to in the introduction. 
+
+\newpage
+
+This appendix includes some of the examples that weren't included in the main text, mostly examples from 
+Mathematical Physics and Quantum Mechanics.
+
+
+\section{Tensor Products}\label{TP}
+The \textit{tensor product} is a way of putting vector spaces (or modules) together to form larger vector 
+spaces. This construction is crucial to understanding the quantum mechanics of multiparticle systems, 
+coalgebras, Hopf algebras, and many other important aspects of Physics and Mathematics. 
+All discussions of Tensor Products inevitably become abstract, however this abstraction is a key power 
+of the tensor product, so the reader is assured that this isn't 'abstraction for abstractions sake'. 
+\paragraph{}
+Suppose V and W are vector spaces of dimension \textit{m} and \textit{n} respectively. For convenience
+we also suppose that V and W are Hilbert spaces. Then $V\otimes W$ (read 'V tensor product W') is an
+\textit{mn} dimensional vector space.
+ The elements of $V \otimes W$ are linear combinations of 'tensor products' $\ket{v} \otimes \ket{w}$
+of elements $\ket{v}$ of V and $\ket{w}$ of W. In particular, if $\ket{i}$ and $\ket{j}$ 
+are orthonormal baes for the spaces V and W then $\ket{i}\otimes \ket{j}$ is a basis for $V \otimes W.$
+In Quantum Mechanics te abbreviated notation $\ket{v}\ket{w}$ is often used for the tensor product $\ket{v}
+\otimes \ket{w}.$ For example, if V is a two-dimensional vector space with basis vectors $\ket{0}$ and 
+$\ket{1}$ then $\ket{0}\otimes \ket{0} + \ket{1} \otimes \ket{1}$ is an element of $V \otimes V.$
+\newline  By definition the tensor product satisfies the following basic properties:
+(1) For an arbitrary scalar \textit{z} and elements $\ket{v}$ of V and $\ket{w}$ of W,
+\begin{equation}
+ \mathit{z}(\ket{v} \otimes \ket{w}) = (z\ket{v})\otimes(\ket{w}) = \ket{v} \otimes (z\ket{w}).
+\end{equation} 
+(2) For arbitrary $\ket{v_{1}}$ and $\ket{v_{2}}$ in V and $\ket{w}$ in W,
+\begin{equation}
+ (\ket{v_{1}} + \ket{v_{2}})\otimes\ket{w}=\ket{v_{1}}\otimes \ket{w} + \ket{v_{2}}\otimes \ket{w}.
+\end{equation}
+(3) For arbitrary $\ket{v}$ in V and $\ket{w_{1}}$ and $\ket{w_{2}}$ in W,
+\begin{equation}
+ \ket{v} \otimes (\ket{w_{1}}+\ket{w_{2}}) = \ket{v}\otimes \ket{w} + \ket{v}\otimes \ket{w}
+\end{equation}
+  What sorts of linear operators act on the space $V \otimes W?$ Suppose $\ket{v}$ and $\ket{w}$ 
+are vectors in V and W, and A and B are linear operators on V and W, respectively. Then we can define
+a linear operator $A \otimes B$ on $V \otimes W$ by the equation
+\begin{equation}
+ (A \otimes B)(\ket{v} \otimes \ket{w}) \equiv A\ket{v} \otimes B\ket{w}.
+\end{equation}
+The definition of $A \otimes B$, that is,
+\begin{equation}
+ (A \otimes B)(\Sigma_{i}a_{i}\ket{v_{i}} \otimes \ket{w_{i}}) \equiv \sigma_{i}a_{i}A\ket{v_{i}} \otimes
+B\ket{w_{i}}.
+\end{equation}
+It can be shwon that $A \otimes B$ defined in this way is a well-defined linear operator on $V \otimes W$.
+This notion of a tensor product of two operators extends in the obvious way to the case where
+A:V $\rightarrow$ V' and B:W $\rightarrow$ W' map between different vector spaces. 
+Indeed, and arbitrary linear operator C mapping $V \otimes W$ to $V' \otimes W'$ can be represented
+as a linear combination of tensor products of operators mapping V to V' and W to W',
+\begin{equation}
+ C = \sigma_{i} c_{i}A_{i} \otimes B_{i},
+\end{equation}
+where by definition
+\begin{equation}
+ (\Sigma_{i} c_{i}A_{i}\otimes B){i})\ket{v} \otimes \ket{w} \equiv \sigma_{i} c_{i}A_{i}\ket{v} \otimes
+B_{i}\ket{w}. 
+\end{equation}
+  The inner products on the spaces V and W can be used to define a natural inner product $V \otimes W$.
+Define
+\begin{equation}
+ (\Sigma_{i}a_{i}\ket{v_{i}}\otimes \ket{w_{i}},\Sigma_{i} b_{j}\ket{v'_{j}}\otimes \ket{w'_{j}}) \equiv
+\Sigma_{ij} a*_{i}b_{j}\bra{v_{i}}\ket{v'_{j}}\bra{w_{i}}\ket{w'_{j}}.
+\end{equation}
+It can be shown that the function so defined is a well-defined inner product. 
+We can also write the tensor product in a matrix representation.
+\section{Categories}\label{Categories}
+Let us recall some basic category theoretical concepts.~\cite{CategoryTheory}
+ Many examples of categories are well known. The category \texttt{Set} of sets and maps between them,
+the category \texttt{Vect} of vector spaces and linear maps, \texttt{Top} of topological spaces and 
+continuous maps... An abstract category is made up roughly by a class of objects that need not be sets (and
+are thought of as points - one could think of this as how functions in a function space are not thought as
+functions, but points in a function space), and by a class of morphisms that thus need not be
+ maps assigning a unique target element to each source element (and are thought of as arrows between points). 
+The definition
+of a category extends the basic properties of the preceding concrete categories to this abstract setting. 
+\begin{definition} 
+ A \textbf{category} \texttt{C} consists of a set \textbf{Ob}(\texttt{C} (or simply \texttt{C})
+of objects, and, for each objects A,B $\in$ \texttt{C} of a set $Hom_{C}(A,B)$ (or simply $Hom(A,B)$)
+of morphisms $f: A \rightarrow B$ from A to B. Moreover, for any objects A,B,C $\in$ \texttt{C}, there 
+exists a composition map $\circ$ : $Hom(A,B) \times Hom(B,C) \ni (f,g) \rightarrow g\;\circ\;f\;
+\in\;Hom(A,C)$
+This operation is required to be associative and to have identities, i.e. for each object 
+$A \in \mathtt{C}$ there exists an identity morphism $1_{A} \in Hom(A,A)$ such that if $f \in Hom(A,B)$
+and $g \in Hom(C,A)$, we have f $\circ$ $1_{A}\;=\;f$ and $1_{A}\;\circ\;g\;=\;g$ (this entails that the identities
+are actually unique)
+
+\end{definition}
+The \textbf{opposite category} $\mathtt{C^{op}}$ of \texttt{C} is the category defined by the same objects
+\textbf{Ob}$\mathtt{C^{op}}=Ob(\mathtt{C})$ and by the 'reversed morphisms' $Hom_{\mathtt{C^{op}}}(A,B):=
+Hom_{\mathtt{C}}(B,A).$
+\begin{remark}
+ For simplicity, we will skip the set-theoretic problems related with cardinality and universes~\cite{CategoryTheory}
+\end{remark}
+Categories form themselves a 'metacategory'. Morphisms between categories, whic respect of course
+the categorical structure, are called functors. 
+
+\subsection{What is a functor}\label{Functor}
+One of the most important notions in Category Theory and subsequently in studying Algebras and Coalgebras
+is that of a functor. 
+\textbf{Intuitive}
+Intuitively one can just call a functor a 'homomorphism of categories', a 0-functor is just a function
+since it is a homomorphism of sets. Functions are morphisms in the category Set. 
+\begin{itemize}
+ \item A functor is what goes between categories. 
+\item A functor from C to D is an image of C in D
+\item A functor between (small) categories is a morphism of the underlying directed graphs that respects
+the composition of the edges. 
+\end{itemize}
+\textbf{Formally}
+So a functor $F: C \rightarrow D$ is a morphism between two categories that
+\begin{itemize}
+ \item consists of a map $F_{0}:Obj(C) \rightarrow Obj(D)$ of the objects of the categories
+\item and a map $F_{1}:Mor(C) \rightarrow Mor(D)$ of the morphisms of the categories
+\end{itemize}
+such that
+\begin{itemize}
+ \item it respects source and target $F_{1}$ coincides with $F_{0}$ on source and target objects;
+\item it respects composition: the image of the composite of two morphism under F is the composite of their
+images
+\end{itemize}
+The last point is the most important one. An excellent introduction to Category theory is provided in ~\cite{CategoryTheory}
+\subsection{Universal Property}\label{Universal}
+In various branches of Mathematics the universal property can be charaterized as the 'most efficient solution'.
+If a solution can be found it can be proven that this is the unique solution. 
+The level of abstraction can be oppressive so we will use examples supplied in the above work.
+\begin{itemize}
+ \item 
+ 
+The concrete details of a given construction may be messy, but if the construction satisfies a universal property, one can forget all those details: all there is to know about the construct is already contained in the universal property. Proofs often become short and elegant if the universal property is used rather than the concrete details. For example, the tensor algebra of a vector space is slightly painful to actually construct, but using its universal property makes it much easier to deal with.
+\item Universal properties define objects up to a unique isomorphism. Therefore, one strategy to prove that two objects are isomorphic is to show that they satisfy the same universal property.
+\item Universal constructions are functorial in nature: if one can carry out the construction for every object in a category C then one obtains a functor on C.
+ \item Furthermore, this functor is a right or left adjoint to the functor U used in the definition of the universal property.[1]
+\item Universal properties occur everywhere in mathematics. By understanding their abstract properties, one obtains information about all these constructions and can avoid repeating the same analysis for each individual instance.
+\end{itemize}
+\cite{MeasureTheory}
+\section{Tambora-Yamagomi Theory}
+The following work is an elaboration of work on Ising anyon models \cite{Bomin2010PhRvL.105c0403B_IsingAnyons} and Fibonacci anyon models 
+\cite{2007PhDT.......224H}. A recent proposal for a Topological Quantum Computer based on the Ising Anyon model was proposed in \cite{Blueprint_TQC_2010}
+\subsection{Fusion Categories}%Tk edit below to include something about categories, needs a full rewrite
+Fusion categories appear in conformal field theory, operator algebras, represen-
+tation theory, and quantum topology. They underly models of fractional quantum
+Hall quasiparticles, the proposed raw material for topological quantum computa-
+tion. Fusion rules can be viewed as nondeterministic groups. Every fusion category
+has a fusion rule up to isomorphism. Thus the problem of classifying fusion cat-
+egories splits into two difficult subproblems: understand fusion rules, and given a
+fusion rule, understand the associated fusion categories—of which there are only
+finitely many up to equivalence over an algebraically closed field of characteristic 0
+\subsection{Blueprint for a TQC}%TK: Nice introductThe advancement of information processing into the
+realm of quantum mechanics promises a transcendence
+in computational power that will enable problems to be
+solved which are completely beyond the known abilities
+of any “classical” computer, including any potential non-
+quantum technologies the future may bring. However,
+the fragility of quantum states poses a challenging obsta-
+cle for realization of a fault-tolerant quantum computer.
+The topological approach to quantum computation pro-
+poses to surmount this obstacle by using special physi-
+cal systems – non-Abelian topologically ordered phases
+of matter – that would provide intrinsic fault-tolerance
+at the hardware level. The so-called “Ising-type” non-
+Abelian topological order is likely to be physically re-
+alized in a number of systems, but it can only provide
+a universal gate set (a requisite for quantum computa-
+tion) if one has the ability to perform certain dynami-
+cal topology-changing operations on the system. Until
+now, practical methods of implementing these operations
+were unknown. Here we show how the necessary oper-
+ations can be physically implemented for Ising-type sys-
+tems realized in the recently proposed superconductor-
+semiconductor and superconductor-topological insulator
+heterostructures. Furthermore, we specify routines em-
+ploying these methods to generate a computationally uni-
+versal gate set. We are consequently able to provide
+a schematic blueprint for a fully topologically-protected
+Ising based quantum computer using currently available
+materials and techniques. This may serve as a start-
+ing point for attempts to construct a fault-tolerant quan-
+tum computer, which will have applications to cryptanal-
+ysis, drug design, efficient simulation of quantum many-
+body systems, solution of large systems of linear equa-
+tions, searching large databases, engineering future quan-
+tum computers, and – most importantly – those applica-
+tions which no one in our classical era has the prescience
+to foresee.
+ion, which also needs rewritten about the potential strengths of QC
+The advancement of information processing into the
+realm of quantum mechanics promises a transcendence
+in computational power that will enable problems to be
+solved which are completely beyond the known abilities
+of any “classical” computer, including any potential non-
+quantum technologies the future may bring. However,
+the fragility of quantum states poses a challenging obsta-
+cle for realization of a fault-tolerant quantum computer.
+The topological approach to quantum computation pro-
+poses to surmount this obstacle by using special physi-
+cal systems – non-Abelian topologically ordered phases
+of matter – that would provide intrinsic fault-tolerance
+at the hardware level. The so-called “Ising-type” non-
+Abelian topological order is likely to be physically re-
+alized in a number of systems, but it can only provide
+a universal gate set (a requisite for quantum computa-
+tion) if one has the ability to perform certain dynami-
+cal topology-changing operations on the system. Until
+now, practical methods of implementing these operations
+were unknown. Here we show how the necessary oper-
+ations can be physically implemented for Ising-type sys-
+tems realized in the recently proposed superconductor-
+semiconductor and superconductor-topological insulator
+heterostructures. Furthermore, we specify routines em-
+ploying these methods to generate a computationally uni-
+versal gate set. We are consequently able to provide
+a schematic blueprint for a fully topologically-protected
+Ising based quantum computer using currently available
+materials and techniques. This may serve as a start-
+ing point for attempts to construct a fault-tolerant quan-
+tum computer, which will have applications to cryptanal-
+ysis, drug design, efficient simulation of quantum many-
+body systems, solution of large systems of linear equa-
+tions, searching large databases, engineering future quan-
+tum computers, and – most importantly – those applica-
+tions which no one in our classical era has the prescience
+to foresee.
+
+\newpage
+\section{References}
+\bibliographystyle{elsarticle-harv}
+\bibliography{Analysis,CoAlgebras} 
+\end{document}
+ 
